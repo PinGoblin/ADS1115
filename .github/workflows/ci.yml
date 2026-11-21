@@ -16,9 +16,9 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
-      - name: Raspberry Pi helper and examples (fake Adafruit library)
+      - name: Raspberry Pi module and examples (fake Adafruit library)
         run: python3 tests/test_python.py
-      - name: MicroPython driver (simulated ADS1115)
+      - name: MicroPython module (simulated ADS1115)
         run: python3 tests/test_micropython.py
 
   docs:

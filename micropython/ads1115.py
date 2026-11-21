@@ -1,4 +1,4 @@
-"""Small MicroPython driver for the PinGoblin ADS1115 4-channel ADC breakout.
+"""MicroPython module for the PinGoblin ADS1115 4-channel ADC breakout.
 
 Runs on the ESP32, Raspberry Pi Pico and any other MicroPython board with `machine.I2C`.
 It has no dependencies: copy this file to the board with Thonny or

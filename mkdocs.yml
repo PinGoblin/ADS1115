@@ -35,7 +35,6 @@ nav:
       - Quick start: user-guide/quick-start.md
       - Connecting sensors: user-guide/connecting-sensors.md
       - Configuration: user-guide/configuration.md
-      - Software and examples: user-guide/software.md
       - Accuracy and calibration: user-guide/accuracy.md
       - Electrical specifications and safety: user-guide/specifications.md
       - Troubleshooting: user-guide/troubleshooting.md
@@ -45,8 +44,8 @@ nav:
           - Raspberry Pi: api/examples-python.md
           - MicroPython: api/examples-micropython.md
       - API reference:
-          - Raspberry Pi helper (breakout_ads): api/reference/breakout_ads.md
-          - MicroPython driver (ads1115): api/reference/ads1115.md
+          - Raspberry Pi module (breakout_ads): api/reference/breakout_ads.md
+          - MicroPython module (ads1115): api/reference/ads1115.md
 
 markdown_extensions:
   - admonition

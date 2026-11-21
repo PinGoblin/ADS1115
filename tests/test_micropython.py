@@ -1,4 +1,4 @@
-"""Tests for the MicroPython driver against a simulated ADS1115 register map (runs on CPython)."""
+"""Tests for the MicroPython module against a simulated ADS1115 register map (runs on CPython)."""
 import os
 import sys
 import time
@@ -36,4 +36,4 @@ adc.enable_ready_pin(); adc.start(1)
 assert (2, 0x0000) in chip.writes and (3, 0x8000) in chip.writes
 assert chip.writes[-1][1] & 3 == 0   # comparator queue enabled for ready pulses
 assert abs(adc.result_voltage() - 1.65) < 0.0002
-print("MicroPython driver OK, config word", hex(cfg))
+print("MicroPython module OK, config word", hex(cfg))

@@ -14,7 +14,7 @@ python3 01_read_all_channels.py
 
 | Script | What it shows | Jumpers |
 |---|---|---|
-| `breakout_ads.py` | Helper: library setup, board constants, conversion maths, calibration | — |
+| `breakout_ads.py` | Module used by every script: library setup, board constants, conversion maths, calibration | — |
 | `01_read_all_channels.py` | Raw counts and volts on CH0–CH3 | RES open |
 | `02_thermistor_ntc.py` | 10 k NTC temperature (Beta equation), optional live VDD measurement | RES closed on the NTC channel |
 | `03_light_and_pot.py` | Two sensor types side by side: potentiometer (%) and bare LDR | CH0 RES open, CH1 RES closed |
@@ -22,7 +22,7 @@ python3 01_read_all_channels.py
 | `05_csv_logger.py` | Logs all channels to CSV: `python3 05_csv_logger.py 60 log.csv` | Any |
 | `06_calibrate.py` | One-point gain calibration saved to `calibration.json` | RES open on the channel being calibrated |
 
-## Helper functions (`breakout_ads.py`)
+## Module functions (`breakout_ads.py`)
 
 | Function | Purpose |
 |---|---|

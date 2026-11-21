@@ -1,11 +1,11 @@
 # ADS1115 API
 
-The repository has two pieces of code, one for each kind of host. Neither needs to be installed as a package: copy the folder you need to your board.
+The repository has two Python modules, one for each kind of host, each with example scripts. Neither needs to be installed as a package: copy the folder you need to your board.
 
 | Folder | Runs on | What it is | Dependencies |
 |---|---|---|---|
-| [`python/`](https://github.com/PinGoblin/ADS1115/tree/main/python) | Raspberry Pi and other Linux boards | [`breakout_ads`](reference/breakout_ads.md) helper module and six example scripts | Adafruit [`adafruit-circuitpython-ads1x15`](https://pypi.org/project/adafruit-circuitpython-ads1x15/) 2.x or 3.x |
-| [`micropython/`](https://github.com/PinGoblin/ADS1115/tree/main/micropython) | ESP32, Raspberry Pi Pico and other MicroPython boards | [`ads1115`](reference/ads1115.md) driver and two example scripts | None |
+| [`python/`](https://github.com/PinGoblin/ADS1115/tree/main/python) | Raspberry Pi and other Linux boards | [`breakout_ads`](reference/breakout_ads.md) module, built on the Adafruit library, and [six example scripts](examples-python.md) | Adafruit [`adafruit-circuitpython-ads1x15`](https://pypi.org/project/adafruit-circuitpython-ads1x15/) 2.x or 3.x |
+| [`micropython/`](https://github.com/PinGoblin/ADS1115/tree/main/micropython) | ESP32, Raspberry Pi Pico and other MicroPython boards | [`ads1115`](reference/ads1115.md) module, which talks to the chip directly, and [two example scripts](examples-micropython.md) | None |
 
 ## Raspberry Pi quick start
 
@@ -50,3 +50,19 @@ print([adc.read_voltage(ch) for ch in range(4)])
 | Samples per second | `data_rate=128` | `rate=128` | 128; 8 for calibration and slow sensors |
 
 See [Configuration](../user-guide/configuration.md) for the full gain table and [Accuracy and calibration](../user-guide/accuracy.md) for calibration.
+
+## Conversion formulas
+
+Vadc is the voltage the ADC reports. For a resistive sensor with the RES jumper closed, the sensor's resistance is ([`resistance_from_voltage()`][breakout_ads.resistance_from_voltage]):
+
+```text
+Rs = 10 kΩ × Vadc / (VDD − Vadc)
+```
+
+For an NTC thermistor, temperature in kelvin follows from the Beta equation ([`ntc_celsius()`][breakout_ads.ntc_celsius]), using R0, T0 and B from the thermistor's datasheet (commonly 10 kΩ, 298.15 K and 3950):
+
+```text
+1/T = 1/T0 + ln(Rs / R0) / B
+```
+
+Subtract 273.15 to convert kelvin to degrees Celsius. For voltage-output sensors, use the sensor's own datasheet formula on Vadc directly.

@@ -14,6 +14,6 @@ The ADS1115 breakout adds four 16-bit analogue inputs to a Raspberry Pi, ESP32 o
 
     ---
 
-    The Raspberry Pi helper module and the MicroPython driver: installation, example scripts and the full function reference.
+    The Raspberry Pi and MicroPython modules: installation, example scripts and the full function reference.
 
 </div>
