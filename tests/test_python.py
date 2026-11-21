@@ -1,4 +1,4 @@
-"""Tests for the Raspberry Pi helper and examples, using a fake Adafruit library (no hardware)."""
+"""Tests for the Raspberry Pi module and examples, using a fake Adafruit library (no hardware)."""
 import math
 import os
 import runpy

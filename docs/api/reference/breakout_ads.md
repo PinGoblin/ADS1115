@@ -1,3 +1,3 @@
-# Raspberry Pi helper: breakout_ads
+# Raspberry Pi module: breakout_ads
 
 ::: breakout_ads

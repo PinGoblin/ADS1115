@@ -1,4 +1,4 @@
-"""Helper module for the PinGoblin ADS1115 4-channel ADC breakout on a Raspberry Pi.
+"""Raspberry Pi module for the PinGoblin ADS1115 4-channel ADC breakout.
 
 Every example script imports this module, so keep it in the same folder as them. It:
 

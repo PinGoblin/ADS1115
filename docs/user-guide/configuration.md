@@ -17,7 +17,7 @@ Three things can be configured: the I²C address and each channel's RES mode, se
 
 **RES jumpers.** JP5–JP8 enable the 10 kΩ excitation resistor for CH0–CH3. Leave them open for voltage-output sensors; close them only for bare resistive sensors (see [Connecting sensors](connecting-sensors.md)).
 
-**Gain (programmable full-scale range).** Set in software with `ads.gain` (Adafruit library) or `fsr=` (MicroPython driver). Choose the smallest range that still covers your highest expected voltage.
+**Gain (programmable full-scale range).** Set in software with `ads.gain` (Adafruit library) or `fsr=` (MicroPython `ads1115` module). Choose the smallest range that still covers your highest expected voltage.
 
 | `ads.gain` | Full-scale range | Resolution (1 count) | Use for |
 |---|---|---|---|

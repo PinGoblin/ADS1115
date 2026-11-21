@@ -6,7 +6,7 @@ No extra libraries are needed. Copy `ads1115.py` to the board with Thonny or `mp
 
 | File | What it is |
 |---|---|
-| `ads1115.py` | Small driver: single-ended and differential reads, gain and data rate, RDY-pin support |
+| `ads1115.py` | Module with no dependencies: single-ended and differential reads, gain and data rate, RDY-pin support |
 | `main.py` | Thermistor on CH0 (RES jumper closed) and voltages on CH1–CH3 |
 | `ready_pin_fast.py` | 860 samples/s using the RDY pin (J1 pin 5) on GPIO4 as an interrupt |
 
