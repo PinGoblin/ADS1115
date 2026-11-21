@@ -28,6 +28,7 @@ from ads1115 import ADS1115
 VDD = 3.30            # measure your board's real VDD (TP5 to TP6)
 R_EXC = 10_000        # excitation resistor fitted on the board
 R0, T0_C, BETA = 10_000, 25.0, 3950   # thermistor datasheet values
+R_OPEN = 5_000_000    # above this the thermistor is treated as disconnected
 
 i2c = I2C(0, scl=Pin(22), sda=Pin(21), freq=400_000)
 found = i2c.scan()
@@ -43,6 +44,8 @@ def ntc_celsius(v):
     if v <= 0 or v >= VDD:
         return None
     r = R_EXC * v / (VDD - v)
+    if r > R_OPEN:
+        return None
     return 1 / (1 / (T0_C + 273.15) + math.log(r / R0) / BETA) - 273.15
 
 

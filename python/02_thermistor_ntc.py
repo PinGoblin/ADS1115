@@ -28,6 +28,8 @@ R0 = 10_000.0          # resistance at T0
 T0_C = 25.0
 BETA = 3950.0          # check your part: 3380, 3435 and 3950 are all common
 
+R_OPEN = 5_000_000     # above this the thermistor is treated as disconnected (a 10 k NTC is ~1 M at -55 C)
+
 ads = open_adc(gain=1)
 ntc = channel(ads, NTC_CHANNEL)
 vdd_ch = channel(ads, VDD_CHANNEL) if VDD_CHANNEL is not None else None
@@ -40,7 +42,7 @@ try:
             vdd = apply_calibration(read_average(vdd_ch), VDD_CHANNEL, cal)
         v = apply_calibration(read_average(ntc, samples=16), NTC_CHANNEL, cal)
         r = resistance_from_voltage(v, vdd)
-        if r == float("inf"):
+        if r > R_OPEN:
             print("Open circuit - is the thermistor connected and RES closed?")
         elif r < 50:
             print("Short circuit - check the thermistor wiring")

@@ -11,7 +11,7 @@ A breakout board that adds four 16-bit analogue inputs to a Raspberry Pi, ESP32 
 | [`python/`](python/) | Raspberry Pi: `breakout_ads.py` module and six example scripts, built on the Adafruit ADS1x15 library |
 | [`micropython/`](micropython/) | ESP32 / MicroPython: `ads1115.py` module with no dependencies, plus two examples |
 | [`docs/`](docs/) | MkDocs source for the documentation site |
-| [`tests/`](tests/) | Hardware-free tests for both modules |
+| [`tests/`](tests/) | Hardware-free unit tests for both modules, every example and the docs: `python3 -m unittest discover -s tests` |
 
 ## Quick start (Raspberry Pi)
 
