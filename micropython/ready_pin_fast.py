@@ -1,14 +1,13 @@
-"""
-ESP32 MicroPython example - fast sampling with the RDY pin.
+"""ESP32 MicroPython example: fast sampling with the RDY pin.
 
-Instead of waiting a fixed time, the ADS1115 pulls RDY low the moment
-each conversion is finished. The ESP32 catches that edge with an interrupt.
+Instead of waiting a fixed time, the ADS1115 pulls RDY low the moment each conversion
+finishes, and the ESP32 catches that edge with an interrupt. Samples CH0 at 860 samples/s
+for 2 seconds and prints the statistics.
 
-Extra wiring: breakout J1 pin 5 (RDY) -> ESP32 GPIO4.
-(The board already has a 10 k pull-up on RDY.)
+**Extra wiring:** breakout J1 pin 5 (RDY) to ESP32 GPIO4. The board already has a
+10 kΩ pull-up on RDY.
 
-Samples CH0 at 860 samples/s for 2 seconds and prints the statistics.
-Run with:  mpremote run ready_pin_fast.py
+Run with `mpremote run ready_pin_fast.py`.
 """
 import time
 from machine import I2C, Pin
@@ -23,6 +22,7 @@ ready = False
 
 
 def on_ready(pin):
+    """Interrupt handler: flag that a conversion has finished."""
     global ready
     ready = True
 

@@ -1,15 +1,23 @@
-"""
-ESP32 MicroPython example - all four channels plus a thermistor on CH0.
+"""ESP32 MicroPython example: a thermistor on CH0 and voltages on CH1–CH3.
 
-Wiring (ESP32 DevKit defaults; change the pins below for other boards):
-    Breakout J1 VDD -> ESP32 3V3      J1 GND -> GND
-    Breakout J1 SCL -> GPIO22         J1 SDA -> GPIO21
-    (or use a Qwiic cable if your ESP32 board has a Qwiic/STEMMA QT port)
+Prints the temperature and three voltages once a second. Copy `ads1115.py` and this
+file to the ESP32, then reset it.
 
-CH0 (J2): 10 k NTC thermistor, SIG and GND pins, RES jumper JP5 closed.
-CH1-CH3 (J3-J5): any voltage-output sensors, RES open.
+**Wiring** (ESP32 DevKit defaults; change the pins below for other boards)
 
-Copy ads1115.py and this file to the ESP32, then reset it.
+| Breakout J1 | ESP32 |
+|---|---|
+| VDD | 3V3 |
+| GND | GND |
+| SCL | GPIO22 |
+| SDA | GPIO21 |
+
+Or use a Qwiic cable if your ESP32 board has a Qwiic / STEMMA QT port.
+
+**Board setup**
+
+- CH0 (J2): 10 kΩ NTC thermistor on the SIG and GND pins, RES jumper JP5 closed.
+- CH1–CH3 (J3–J5): voltage-output sensors, RES open.
 """
 import math
 import time
@@ -31,6 +39,7 @@ adc = ADS1115(i2c, address=0x48, fsr=4.096, rate=128)
 
 
 def ntc_celsius(v):
+    """Convert the CH0 voltage to °C (Beta equation), or `None` for an open or short circuit."""
     if v <= 0 or v >= VDD:
         return None
     r = R_EXC * v / (VDD - v)

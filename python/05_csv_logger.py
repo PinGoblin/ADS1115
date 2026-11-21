@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""
-Example 5 - Log all four channels to a CSV file.
+"""Example 5: log all four channels to a CSV file.
 
-Usage:
-    python3 05_csv_logger.py                 # every 5 s to ads_log.csv
-    python3 05_csv_logger.py 60 garden.csv   # every 60 s to garden.csv
+Each row holds an ISO timestamp, then CH0–CH3 in volts (16-sample averages). Open the file
+in a spreadsheet to chart it. Press Ctrl+C to stop.
 
-Each row: ISO timestamp, then CH0-CH3 in volts (16-sample average).
-Open the file in a spreadsheet to chart it. Ctrl+C to stop.
+**Usage**
+
+```bash
+python3 05_csv_logger.py                 # every 5 s to ads_log.csv
+python3 05_csv_logger.py 60 garden.csv   # every 60 s to garden.csv
+```
 """
 import csv
 import os

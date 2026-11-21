@@ -2,12 +2,16 @@
 
 A breakout board that adds four 16-bit analogue inputs to a Raspberry Pi, ESP32 or any other I²C host. It uses the TI ADS1115, has a 3-pin sensor header (GND, VDD, SIG) per channel, protected inputs, solder-jumper configuration for resistive sensors, and two Qwiic / STEMMA QT connectors for daisy-chaining.
 
+**Documentation:** https://pingoblin.github.io/ADS1115/ (user guide and API reference)
+
 ## Contents
 
 | Folder | What it is |
 |---|---|
 | [`python/`](python/) | Raspberry Pi: helper module `breakout_ads.py` and six example scripts, built on the Adafruit ADS1x15 library |
 | [`micropython/`](micropython/) | ESP32 / MicroPython: standalone `ads1115.py` driver with no dependencies, plus two examples |
+| [`docs/`](docs/) | MkDocs source for the documentation site |
+| [`tests/`](tests/) | Hardware-free tests for both libraries |
 
 ## Quick start (Raspberry Pi)
 
@@ -33,6 +37,17 @@ J1 VDD → 3V3, GND → GND, SCL → SCL, SDA → SDA, or use a Qwiic / STEMMA Q
 | Closed | Bare resistive sensors between SIG and GND: 10 k NTC thermistor, LDR, FSR, flex sensor |
 
 I²C address: 0x48 by default (JP1). Move the address jumper to JP2, JP3 or JP4 for 0x49, 0x4A or 0x4B, so up to four boards share one bus.
+
+## Documentation
+
+The documentation in `docs/` is the source of truth for the board and its code. CI builds it on every push and publishes it to GitHub Pages from `main`. To preview it locally:
+
+```bash
+pip install -r requirements-docs.txt
+mkdocs serve
+```
+
+Docstrings use the Google style with Markdown, and are rendered into the API reference by mkdocstrings.
 
 ## Licence
 

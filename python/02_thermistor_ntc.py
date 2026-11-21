@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
-"""
-Example 2 - 10 k NTC thermistor temperature.
+"""Example 2: temperature from a 10 kΩ NTC thermistor.
 
-Board setup:
-  * Close the RES jumper for the channel you use (JP5 for CH0).
-  * Thermistor leads: one to SIG (pin 3), one to GND (pin 1) of J2.
-    The VDD pin is not used. A thermistor has no polarity.
+**Board setup**
 
-Accuracy tips:
-  * Measure the board's real VDD (TP5 to TP6) and set VDD below, or
-  * set VDD_CHANNEL to a spare channel and link that header's VDD pin to its
-    SIG pin with a jumper wire (RES open) - the script then measures VDD live.
+- Close the RES jumper of the channel you use (JP5 for CH0).
+- Connect one thermistor lead to SIG (pin 3) and the other to GND (pin 1) of J2.
+  The VDD pin is not used, and a thermistor has no polarity.
+
+**Accuracy tips**
+
+- Measure the board's real VDD between TP5 and TP6 and set `VDD`, or
+- set `VDD_CHANNEL` to a spare channel and link that header's VDD pin to its SIG pin with
+  a jumper wire (RES open). The script then measures VDD live.
+- Set `R0`, `T0_C` and `BETA` from your thermistor's datasheet.
 """
 import time
 

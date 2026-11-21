@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-"""
-Example 3 - Mixing sensor types on one board.
+"""Example 3: two sensor types on one board.
 
-  CH0 (J2): potentiometer, RES open.  Pot ends to GND and VDD pins, wiper to SIG.
-  CH1 (J3): bare LDR (light-dependent resistor), RES closed (JP6).
-            One lead to SIG, the other to GND.
+Shows how a voltage-output channel and a resistive channel are converted differently.
 
-Shows how each channel is converted differently.
+**Board setup**
+
+| Channel | Sensor | RES jumper | Wiring |
+|---|---|---|---|
+| CH0 (J2) | Potentiometer | Open | Ends to GND and VDD, wiper to SIG |
+| CH1 (J3) | Bare LDR | Closed (JP6) | One lead to SIG, the other to GND |
 """
 import time
 

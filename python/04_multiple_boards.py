@@ -1,15 +1,21 @@
 #!/usr/bin/env python3
-"""
-Example 4 - Several boards on one I2C bus (up to 16 channels).
+"""Example 4: several boards on one I²C bus, up to 16 channels.
+
+Finds every board at 0x48–0x4B and prints all their channels once a second.
+
+**Board setup**
 
 Give every board a different address with the solder jumpers:
-  board A: JP1 closed (default)                -> 0x48
-  board B: cut JP1, close JP2                  -> 0x49
-  board C: cut JP1, close JP3                  -> 0x4A
-  board D: cut JP1, close JP4                  -> 0x4B
-Daisy-chain them with Qwiic cables (J6 -> J7 of the next board).
 
-Tip: `i2cdetect -y 1` lists the addresses the Pi can see.
+| Board | Jumpers | Address |
+|---|---|---|
+| A | JP1 closed (default) | 0x48 |
+| B | Cut JP1, close JP2 | 0x49 |
+| C | Cut JP1, close JP3 | 0x4A |
+| D | Cut JP1, close JP4 | 0x4B |
+
+Daisy-chain the boards with Qwiic cables (J6 to J7 of the next board). `i2cdetect -y 1`
+lists the addresses the Pi can see.
 """
 import time
 

@@ -1,5 +1,7 @@
 # Raspberry Pi examples
 
+Full documentation, including the API reference: https://pingoblin.github.io/ADS1115/
+
 Built on the Adafruit [`adafruit-circuitpython-ads1x15`](https://pypi.org/project/adafruit-circuitpython-ads1x15/) library (versions 2.x and 3.x both work). `breakout_ads.py` hides the differences between those versions and holds the board constants and conversion maths, so keep it in the same folder as the scripts.
 
 ```bash

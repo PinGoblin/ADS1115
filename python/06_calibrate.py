@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
-"""
-Example 6 - One-point gain calibration.
+"""Example 6: one-point gain calibration.
 
-Removes the small gain error from the 4.7 k series resistor and the ADC's
-own tolerance (typically 0.1 - 0.2 %).
+Removes the small gain error caused by the 4.7 kΩ series resistor and the ADC's own
+tolerance (typically 0.1–0.2 %).
 
 1. Leave the channel's RES jumper open.
-2. Link the header's VDD pin to its SIG pin with a jumper wire
-   (or apply any steady voltage between 1 V and VDD).
+2. Link the header's VDD pin to its SIG pin with a jumper wire, or apply any steady
+   voltage between 1 V and VDD.
 3. Measure that voltage at the header with a good multimeter.
-4. Run:  python3 06_calibrate.py <channel> <multimeter volts>
-         e.g. python3 06_calibrate.py 0 3.297
+4. Run `python3 06_calibrate.py <channel> <multimeter volts>`,
+   for example `python3 06_calibrate.py 0 3.297`.
 
-The factor is saved to calibration.json and applied automatically by the
-other examples. Repeat for each channel you use.
+The factor is saved to `calibration.json` and applied automatically by the other
+examples. Repeat for each channel you use.
 """
 import sys
 

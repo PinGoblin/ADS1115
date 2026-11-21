@@ -1,5 +1,7 @@
 # ESP32 / MicroPython
 
+Full documentation, including the API reference: https://pingoblin.github.io/ADS1115/
+
 No extra libraries are needed. Copy `ads1115.py` to the board with Thonny or `mpremote cp ads1115.py :`, then copy the example you want to run (as `main.py` to run it at boot).
 
 | File | What it is |

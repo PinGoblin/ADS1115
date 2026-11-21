@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-"""
-Example 1 - Read all four channels.
+"""Example 1: read all four channels.
 
-Wiring: host to J1 or a Qwiic connector, sensors to J2-J5 (GND, VDD, SIG).
-All RES jumpers open (factory default) = voltage-output sensors.
+Prints the raw count and voltage of CH0–CH3 twice a second. Press Ctrl+C to stop.
 
-Prints raw counts and volts for CH0-CH3 twice a second. Ctrl+C to stop.
+**Board setup**
+
+- Host on J1 or a Qwiic connector.
+- Voltage-output sensors on J2–J5 (GND, VDD, SIG).
+- All RES jumpers open (the factory default).
+
+Applies the calibration from `06_calibrate.py` if `calibration.json` exists.
 """
 import time
 
