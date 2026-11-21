@@ -27,9 +27,15 @@ Example:
     print(read_average(ch0, 16))     # volts
     ```
 """
+from __future__ import annotations
+
 import json
 import math
 import os
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:  # for type hints only; not needed at run time
+    from adafruit_ads1x15 import ADS1115, AnalogIn
 
 # --------------------------------------------------------------------------
 # Board constants
@@ -56,7 +62,7 @@ CAL_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "calibration
 # --------------------------------------------------------------------------
 # Library access (works with old and new adafruit-circuitpython-ads1x15)
 # --------------------------------------------------------------------------
-def open_adc(address=0x48, gain=1, data_rate=128):
+def open_adc(address: int = 0x48, gain: float = 1, data_rate: int = 128) -> ADS1115:
     """Open the board on the Raspberry Pi's default I²C bus.
 
     Works with versions 2.x and 3.x of the Adafruit ADS1x15 library.
@@ -86,7 +92,7 @@ def open_adc(address=0x48, gain=1, data_rate=128):
     return ads
 
 
-def channel(ads, ch, ch_neg=None):
+def channel(ads: ADS1115, ch: int, ch_neg: int | None = None) -> AnalogIn:
     """Return an input channel, single-ended or differential.
 
     Args:
@@ -107,7 +113,7 @@ def channel(ads, ch, ch_neg=None):
     return AnalogIn(ads, ch, ch_neg)
 
 
-def read_average(chan, samples=8):
+def read_average(chan: AnalogIn, samples: int = 8) -> float:
     """Average several readings to reduce noise.
 
     Args:
@@ -126,7 +132,7 @@ def read_average(chan, samples=8):
 # --------------------------------------------------------------------------
 # Conversion maths (pure functions, no hardware needed)
 # --------------------------------------------------------------------------
-def resistance_from_voltage(v_adc, vdd=VDD_NOMINAL, r_excitation=R_EXCITATION):
+def resistance_from_voltage(v_adc: float, vdd: float = VDD_NOMINAL, r_excitation: float = R_EXCITATION) -> float:
     """Work out a bare resistive sensor's resistance on a channel with its RES jumper closed.
 
     The 10 kΩ excitation resistor and the sensor form a voltage divider:
@@ -148,7 +154,7 @@ def resistance_from_voltage(v_adc, vdd=VDD_NOMINAL, r_excitation=R_EXCITATION):
     return r_excitation * v_adc / (vdd - v_adc)
 
 
-def ntc_celsius(r_ntc, r0=10_000.0, t0_c=25.0, beta=3950.0):
+def ntc_celsius(r_ntc: float, r0: float = 10_000.0, t0_c: float = 25.0, beta: float = 3950.0) -> float:
     """Convert an NTC thermistor's resistance to temperature with the Beta equation.
 
     `1/T = 1/T0 + ln(R/R0) / B`, with T in kelvin.
@@ -170,7 +176,7 @@ def ntc_celsius(r_ntc, r0=10_000.0, t0_c=25.0, beta=3950.0):
     return 1.0 / inv_t - 273.15
 
 
-def percent_of_range(v_adc, v_min=0.0, v_max=VDD_NOMINAL):
+def percent_of_range(v_adc: float, v_min: float = 0.0, v_max: float = VDD_NOMINAL) -> float:
     """Map a voltage onto 0 to 100 %, for potentiometers, soil probes or LDRs.
 
     Args:
@@ -190,7 +196,7 @@ def percent_of_range(v_adc, v_min=0.0, v_max=VDD_NOMINAL):
 # --------------------------------------------------------------------------
 # Calibration (written by 06_calibrate.py)
 # --------------------------------------------------------------------------
-def load_calibration(path=None):
+def load_calibration(path: str | None = None) -> dict[str, float]:
     """Load per-channel gain factors.
 
     Args:
@@ -207,7 +213,7 @@ def load_calibration(path=None):
         return {}
 
 
-def apply_calibration(v_adc, ch, cal):
+def apply_calibration(v_adc: float, ch: int, cal: dict[str, float]) -> float:
     """Correct a reading with the stored gain factor for its channel.
 
     Args:
@@ -221,7 +227,7 @@ def apply_calibration(v_adc, ch, cal):
     return v_adc * float(cal.get(str(ch), 1.0))
 
 
-def save_calibration(cal, path=None):
+def save_calibration(cal: dict[str, float], path: str | None = None) -> None:
     """Save per-channel gain factors as JSON.
 
     Args:

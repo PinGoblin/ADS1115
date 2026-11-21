@@ -44,7 +44,7 @@ class ADS1115:
     """One ADS1115 breakout on an I²C bus.
 
     Args:
-        i2c: A `machine.I2C` (or `SoftI2C`) object. 100 kHz and 400 kHz both work.
+        i2c (machine.I2C): A `machine.I2C` (or `SoftI2C`) object. 100 kHz and 400 kHz both work.
         address: I²C address set by the address jumpers: `0x48` (default), `0x49`, `0x4A` or `0x4B`.
         fsr: Full-scale range (±V): 6.144, 4.096, 2.048, 1.024, 0.512 or 0.256.
             Use 4.096 on a 3.3 V board.
@@ -60,7 +60,7 @@ class ADS1115:
         rate (int): Samples per second. Can be changed between reads.
     """
 
-    def __init__(self, i2c, address=0x48, fsr=4.096, rate=128):
+    def __init__(self, i2c, address: int = 0x48, fsr: float = 4.096, rate: int = 128):
         if fsr not in _PGA:
             raise ValueError("fsr must be one of %s" % sorted(_PGA))
         if rate not in _DR:
@@ -97,7 +97,7 @@ class ADS1115:
         return raw - 0x10000 if raw & 0x8000 else raw
 
     # -- public API --------------------------------------------------------
-    def read_raw(self, channel):
+    def read_raw(self, channel: int) -> int:
         """Read one single-ended channel as a raw count.
 
         Args:
@@ -111,7 +111,7 @@ class ADS1115:
         """
         return self._convert(_MUX_SINGLE[channel])
 
-    def read_voltage(self, channel, samples=1):
+    def read_voltage(self, channel: int, samples: int = 1) -> float:
         """Read one single-ended channel in volts.
 
         Args:
@@ -129,7 +129,7 @@ class ADS1115:
             total += self.read_raw(channel)
         return total / samples * self.fsr / 32768
 
-    def read_differential(self, pos, neg):
+    def read_differential(self, pos: int, neg: int) -> float:
         """Read the voltage between two inputs.
 
         Both inputs must stay between GND and VDD, and both channels' RES jumpers must be open.
@@ -146,7 +146,7 @@ class ADS1115:
         """
         return self._convert(_MUX_DIFF[(pos, neg)]) * self.fsr / 32768
 
-    def enable_ready_pin(self):
+    def enable_ready_pin(self) -> None:
         """Make the RDY pin pulse low each time a conversion finishes.
 
         RDY is J1 pin 5 (the chip's ALERT/RDY pin), pulled up to VDD on the board. Wire it to
@@ -157,7 +157,7 @@ class ADS1115:
         self._write(_REG_LO_THRESH, 0x0000)
         self._comp = _COMP_ASSERT_1
 
-    def start(self, channel):
+    def start(self, channel: int) -> None:
         """Start a conversion and return at once, without waiting for the result.
 
         Read the result with [`result_voltage()`][ads1115.ADS1115.result_voltage] after the
@@ -169,7 +169,7 @@ class ADS1115:
         """
         self._write(_REG_CONFIG, self._config(_MUX_SINGLE[channel]))
 
-    def result_voltage(self):
+    def result_voltage(self) -> float:
         """Read the result of the last conversion.
 
         Returns:
