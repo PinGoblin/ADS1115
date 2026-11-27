@@ -63,7 +63,7 @@ class ADS1115:
         rate (int): Samples per second. Can be changed between reads.
     """
 
-    def __init__(self, bus=1, address: int = 0x48, fsr: float = 4.096, rate: int = 128):
+    def __init__(self, bus: int | object = 1, address: int = 0x48, fsr: float = 4.096, rate: int = 128):
         if address not in ADDRESSES:
             raise ValueError("address must be one of 0x48, 0x49, 0x4A or 0x4B")
         if fsr not in _PGA:
@@ -213,7 +213,7 @@ class ADS1115:
         self.close()
 
 
-def find_boards(bus=1, addresses=ADDRESSES, **kwargs) -> "dict[int, ADS1115]":
+def find_boards(bus: int | object = 1, addresses: tuple = ADDRESSES, **kwargs: float) -> "dict[int, ADS1115]":
     """Find every board that answers on the bus.
 
     Args:
