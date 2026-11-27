@@ -16,8 +16,8 @@
 """
 import time
 
-from breakout_ads import (open_adc, channel, read_average, resistance_from_voltage,
-                          ntc_celsius, load_calibration, apply_calibration)
+from pingoblin_ads1115 import (ADS1115, resistance_from_voltage, ntc_celsius,
+                               load_calibration, apply_calibration)
 
 NTC_CHANNEL = 0        # CH0 = J2, RES jumper JP5 closed
 VDD = 3.30             # your measured supply voltage
@@ -28,17 +28,15 @@ R0 = 10_000.0          # resistance at T0
 T0_C = 25.0
 BETA = 3950.0          # check your part: 3380, 3435 and 3950 are all common
 
-ads = open_adc(gain=1)
-ntc = channel(ads, NTC_CHANNEL)
-vdd_ch = channel(ads, VDD_CHANNEL) if VDD_CHANNEL is not None else None
+adc = ADS1115(fsr=4.096)
 cal = load_calibration()
 
 try:
     while True:
         vdd = VDD
-        if vdd_ch is not None:
-            vdd = apply_calibration(read_average(vdd_ch), VDD_CHANNEL, cal)
-        v = apply_calibration(read_average(ntc, samples=16), NTC_CHANNEL, cal)
+        if VDD_CHANNEL is not None:
+            vdd = apply_calibration(adc.read_voltage(VDD_CHANNEL, samples=8), VDD_CHANNEL, cal)
+        v = apply_calibration(adc.read_voltage(NTC_CHANNEL, samples=16), NTC_CHANNEL, cal)
         r = resistance_from_voltage(v, vdd)
         if r == float("inf"):
             print("Open circuit - is the thermistor connected and RES closed?")

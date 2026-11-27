@@ -1,6 +1,6 @@
 # Quick start
 
-Power the board from 3.3 V, connect four wires (or one Qwiic cable), install the Adafruit library and run the first example. The board appears at I²C address 0x48 out of the box.
+Power the board from 3.3 V, connect four wires (or one Qwiic cable), install the library and run the first example. The board appears at I²C address 0x48 out of the box.
 
 ## Raspberry Pi wiring (J1)
 
@@ -23,7 +23,7 @@ VDD to 3V3, GND to GND, SCL to GPIO22, SDA to GPIO21. Boards with a Qwiic or STE
 3. Install the library in a virtual environment:
     1. `python3 -m venv ~/ads-env`
     2. `source ~/ads-env/bin/activate`
-    3. `pip install adafruit-circuitpython-ads1x15`
+    3. `pip install "git+https://github.com/PinGoblin/ADS1115#subdirectory=python"`
 4. Copy the [`python`](https://github.com/PinGoblin/ADS1115/tree/main/python) folder from the repository to the Pi and run `python3 01_read_all_channels.py` inside it.
 
 ## ESP32 software (MicroPython)

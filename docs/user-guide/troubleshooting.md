@@ -14,6 +14,7 @@ Most problems come down to I²C wiring, a jumper in the wrong state or a floatin
 | Thermistor temperature a few degrees out | Wrong Beta value or wrong VDD in the script | Use the datasheet Beta; measure VDD (see [Accuracy and calibration](accuracy.md)) |
 | Readings stop at about 3.3 V | Input is at VDD; the ADC cannot read above its supply | Keep inputs below VDD; divide higher voltages before the board |
 | Very noisy readings | Long unshielded leads, or a noisy supply | Twist or shield the cable, average readings, lower the data rate |
-| `ImportError` for `adafruit_ads1x15` | Library missing or wrong virtual environment | Activate the environment and run `pip install adafruit-circuitpython-ads1x15` |
+| `ModuleNotFoundError` for `pingoblin_ads1115` or `smbus2` | Package missing or wrong virtual environment | Activate the environment and run `pip install "git+https://github.com/PinGoblin/ADS1115#subdirectory=python"` |
+| `PermissionError` or `FileNotFoundError` for `/dev/i2c-1` | I²C not enabled, or the user is not in the `i2c` group | Enable I²C with `sudo raspi-config`, then reboot |
 | ESP32 `OSError: [Errno 19] ENODEV` | Wrong pins or address | Check SCL = GPIO22 and SDA = GPIO21; run `i2c.scan()` |
 | No ready pulses in `ready_pin_fast.py` | RDY not wired to the interrupt pin | Connect J1 pin 5 to GPIO4 |

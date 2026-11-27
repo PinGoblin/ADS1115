@@ -1,6 +1,6 @@
 # Raspberry Pi examples
 
-The scripts in the [`python/`](https://github.com/PinGoblin/ADS1115/tree/main/python) folder. Each one imports [`breakout_ads`](reference/breakout_ads.md), so keep them in the same folder. Run them with `python3 <script>` inside the virtual environment that has the Adafruit library installed; press Ctrl+C to stop.
+The scripts in the [`python/`](https://github.com/PinGoblin/ADS1115/tree/main/python) folder. Each one imports the [`pingoblin_ads1115`](reference/pingoblin_ads1115.md) package. Run them with `python3 <script>` inside the virtual environment where the package is installed; press Ctrl+C to stop.
 
 | Script | What it does | Jumper setting |
 |---|---|---|

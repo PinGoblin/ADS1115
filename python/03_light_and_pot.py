@@ -12,20 +12,19 @@ Shows how a voltage-output channel and a resistive channel are converted differe
 """
 import time
 
-from breakout_ads import open_adc, channel, read_average, resistance_from_voltage, percent_of_range
+from pingoblin_ads1115 import ADS1115, resistance_from_voltage, percent_of_range
 
 VDD = 3.30
 
-ads = open_adc(gain=1)
-pot = channel(ads, 0)
-ldr = channel(ads, 1)
+adc = ADS1115(fsr=4.096)
+POT, LDR = 0, 1        # channels
 
 try:
     while True:
-        v_pot = read_average(pot)
+        v_pot = adc.read_voltage(POT, samples=8)
         pot_pct = percent_of_range(v_pot, 0.0, VDD)
 
-        v_ldr = read_average(ldr)
+        v_ldr = adc.read_voltage(LDR, samples=8)
         r_ldr = resistance_from_voltage(v_ldr, VDD)
         # LDR resistance falls as light rises; dark ~1 M, bright ~1 k.
         # Brightness is shown as % of the voltage swing (bright = low voltage).

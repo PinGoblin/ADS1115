@@ -8,7 +8,7 @@ A breakout board that adds four 16-bit analogue inputs to a Raspberry Pi, ESP32 
 
 | Folder | What it is |
 |---|---|
-| [`python/`](python/) | Raspberry Pi: `breakout_ads.py` module and six example scripts, built on the Adafruit ADS1x15 library |
+| [`python/`](python/) | Raspberry Pi: the `pingoblin_ads1115` package (built on `smbus2`) and six example scripts |
 | [`micropython/`](micropython/) | ESP32 / MicroPython: `ads1115.py` module with no dependencies, plus two examples |
 | [`docs/`](docs/) | MkDocs source for the documentation site |
 | [`tests/`](tests/) | Hardware-free tests for both modules |
@@ -19,7 +19,7 @@ A breakout board that adds four 16-bit analogue inputs to a Raspberry Pi, ESP32 
 sudo raspi-config        # Interface Options -> I2C -> Enable, then reboot
 i2cdetect -y 1           # the board should appear at 48 (or 49/4a/4b)
 python3 -m venv ~/ads-env && source ~/ads-env/bin/activate
-pip install adafruit-circuitpython-ads1x15
+pip install "git+https://github.com/PinGoblin/ADS1115#subdirectory=python"
 cd python && python3 01_read_all_channels.py
 ```
 

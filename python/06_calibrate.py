@@ -16,7 +16,7 @@ examples. Repeat for each channel you use.
 """
 import sys
 
-from breakout_ads import open_adc, channel, read_average, load_calibration, save_calibration
+from pingoblin_ads1115 import ADS1115, load_calibration, save_calibration
 
 if len(sys.argv) != 3:
     raise SystemExit(__doc__)
@@ -26,8 +26,8 @@ true_v = float(sys.argv[2])
 if ch not in range(4) or not 0.5 <= true_v <= 5.5:
     raise SystemExit("Channel must be 0-3 and voltage 0.5-5.5 V")
 
-ads = open_adc(gain=1, data_rate=8)        # slowest rate = lowest noise
-measured = read_average(channel(ads, ch), samples=32)
+adc = ADS1115(fsr=4.096, rate=8)           # slowest rate = lowest noise
+measured = adc.read_voltage(ch, samples=32)
 if measured < 0.25:
     raise SystemExit(f"CH{ch} reads {measured:.4f} V - is the voltage connected?")
 

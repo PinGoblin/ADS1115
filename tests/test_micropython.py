@@ -36,4 +36,11 @@ adc.enable_ready_pin(); adc.start(1)
 assert (2, 0x0000) in chip.writes and (3, 0x8000) in chip.writes
 assert chip.writes[-1][1] & 3 == 0   # comparator queue enabled for ready pulses
 assert abs(adc.result_voltage() - 1.65) < 0.0002
+for bad in (lambda: ADS1115(chip, address=0x50), lambda: adc.read_raw(4), lambda: adc.read_differential(1, 2)):
+    try:
+        bad()
+        raise AssertionError("expected ValueError")
+    except ValueError:
+        pass
+assert abs(adc.read_differential(0, 1, samples=3) - (1.0 - 1.65)) < 0.0002
 print("MicroPython module OK, config word", hex(cfg))

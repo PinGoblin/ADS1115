@@ -44,7 +44,7 @@ nav:
           - Raspberry Pi: api/examples-python.md
           - MicroPython: api/examples-micropython.md
       - API reference:
-          - Raspberry Pi module (breakout_ads): api/reference/breakout_ads.md
+          - Raspberry Pi package (pingoblin_ads1115): api/reference/pingoblin_ads1115.md
           - MicroPython module (ads1115): api/reference/ads1115.md
 
 markdown_extensions:

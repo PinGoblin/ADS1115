@@ -51,7 +51,7 @@ class ADS1115:
         rate: Samples per second: 8, 16, 32, 64, 128, 250, 475 or 860.
 
     Raises:
-        ValueError: If `fsr` or `rate` is not one of the allowed values.
+        ValueError: If `address`, `fsr` or `rate` is not one of the allowed values.
 
     Attributes:
         i2c: The I²C bus.
@@ -61,6 +61,8 @@ class ADS1115:
     """
 
     def __init__(self, i2c, address: int = 0x48, fsr: float = 4.096, rate: int = 128):
+        if address not in (0x48, 0x49, 0x4A, 0x4B):
+            raise ValueError("address must be one of 0x48, 0x49, 0x4A or 0x4B")
         if fsr not in _PGA:
             raise ValueError("fsr must be one of %s" % sorted(_PGA))
         if rate not in _DR:
@@ -107,8 +109,11 @@ class ADS1115:
             Signed 16-bit result, −32768 to 32767. Full scale (32767) equals `fsr`.
 
         Raises:
+            ValueError: If `channel` is not 0 to 3.
             OSError: If the board does not answer on the I²C bus.
         """
+        if channel not in (0, 1, 2, 3):
+            raise ValueError("channel must be 0-3")
         return self._convert(_MUX_SINGLE[channel])
 
     def read_voltage(self, channel: int, samples: int = 1) -> float:
@@ -129,7 +134,7 @@ class ADS1115:
             total += self.read_raw(channel)
         return total / samples * self.fsr / 32768
 
-    def read_differential(self, pos: int, neg: int) -> float:
+    def read_differential(self, pos: int, neg: int, samples: int = 1) -> float:
         """Read the voltage between two inputs.
 
         Both inputs must stay between GND and VDD, and both channels' RES jumpers must be open.
@@ -137,14 +142,21 @@ class ADS1115:
         Args:
             pos: Positive input channel.
             neg: Negative input channel. Valid pairs are (0, 1), (0, 3), (1, 3) and (2, 3).
+            samples: Number of conversions to average.
 
         Returns:
-            Voltage `pos − neg` (V); can be negative.
+            Mean voltage `pos − neg` (V); can be negative.
 
         Raises:
-            KeyError: If the pair is not one the ADS1115 supports.
+            ValueError: If the pair is not one the ADS1115 supports.
+            OSError: If the board does not answer on the I²C bus.
         """
-        return self._convert(_MUX_DIFF[(pos, neg)]) * self.fsr / 32768
+        if (pos, neg) not in _MUX_DIFF:
+            raise ValueError("differential pair must be (0, 1), (0, 3), (1, 3) or (2, 3)")
+        total = 0
+        for _ in range(samples):
+            total += self._convert(_MUX_DIFF[(pos, neg)])
+        return total / samples * self.fsr / 32768
 
     def enable_ready_pin(self) -> None:
         """Make the RDY pin pulse low each time a conversion finishes.

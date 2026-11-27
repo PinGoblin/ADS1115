@@ -17,13 +17,12 @@ import sys
 import time
 from datetime import datetime
 
-from breakout_ads import open_adc, channel, read_average, load_calibration, apply_calibration
+from pingoblin_ads1115 import ADS1115, load_calibration, apply_calibration
 
 interval = float(sys.argv[1]) if len(sys.argv) > 1 else 5.0
 path = sys.argv[2] if len(sys.argv) > 2 else "ads_log.csv"
 
-ads = open_adc(gain=1, data_rate=128)
-chans = [channel(ads, ch) for ch in range(4)]
+adc = ADS1115(fsr=4.096, rate=128)
 cal = load_calibration()
 
 new_file = not os.path.exists(path)
@@ -36,8 +35,8 @@ with open(path, "a", newline="") as f:
         while True:
             start = time.monotonic()
             row = [datetime.now().isoformat(timespec="seconds")]
-            for ch, c in enumerate(chans):
-                row.append(f"{apply_calibration(read_average(c, 16), ch, cal):.5f}")
+            for ch in range(4):
+                row.append(f"{apply_calibration(adc.read_voltage(ch, samples=16), ch, cal):.5f}")
             writer.writerow(row)
             f.flush()
             print(", ".join(row))

@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pingoblin-ads1115"
+version = "1.0.0"
+description = "Raspberry Pi library for the PinGoblin ADS1115 4-channel 16-bit ADC board"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+dependencies = ["smbus2>=0.4"]
+
+[project.urls]
+Documentation = "https://pingoblin.github.io/ADS1115/"
+Source = "https://github.com/PinGoblin/ADS1115"
+
+[tool.setuptools]
+packages = ["pingoblin_ads1115"]

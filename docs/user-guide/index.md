@@ -1,6 +1,6 @@
 # User guide
 
-This board adds four 16-bit analogue inputs to a Raspberry Pi, ESP32 or any other I²C host, and is built to survive wiring mistakes. It uses the Texas Instruments ADS1115 ADC and works with the existing Adafruit ADS1x15 libraries.
+This board adds four 16-bit analogue inputs to a Raspberry Pi, ESP32 or any other I²C host, and is built to survive wiring mistakes. It uses the Texas Instruments ADS1115 ADC. PinGoblin's Raspberry Pi and MicroPython libraries drive it directly, and it also works with other ADS1115 libraries.
 
 This user guide covers the board hardware: pinouts, wiring, sensors, configuration, accuracy, specifications and troubleshooting. The Python and MicroPython code is described in the [API](../api/index.md) section.
 
