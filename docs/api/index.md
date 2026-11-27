@@ -33,7 +33,7 @@ The Raspberry Pi library is thread-safe: several threads can share one board, be
 
 ## MicroPython quick start
 
-Copy `ads1115.py` to the board with Thonny or `mpremote cp ads1115.py :`, then:
+Copy `ads1115.py` to the board with Thonny or `mpremote cp ads1115.py :`, or install it with `mpremote mip install github:PinGoblin/ADS1115/micropython`, then:
 
 ```python
 from machine import I2C, Pin
