@@ -29,7 +29,7 @@ print(ntc_celsius(resistance_from_voltage(v, vdd=3.30)))   # with JP5 (RES) clos
 
 To run the examples, copy the [`python`](https://github.com/PinGoblin/ADS1115/tree/main/python) folder to the Pi and run `python3 01_read_all_channels.py` inside it.
 
-The Raspberry Pi library is thread-safe: several threads can share one board, because only one conversion runs at a time. The [PinGoblin dual DC motor board](https://pingoblin.github.io/DRV8874/) library uses it to read motor current.
+The Raspberry Pi library is thread-safe: several threads can share one board, because only one conversion runs at a time. The [PinGoblin DRV8874](https://pingoblin.github.io/DRV8874/) motor driver library uses it to read motor current.
 
 ## MicroPython quick start
 
