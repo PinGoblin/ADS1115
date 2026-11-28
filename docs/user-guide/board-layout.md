@@ -32,7 +32,7 @@ The host connects to J1. Each sensor has its own 3-pin header, J2–J5. Every he
 SIG and GND are required for every sensor. VDD is optional: Use it only for a sensor that the board powers.
 
 !!! danger "VDD on the sensor headers is a supply output: Never connect a supply to it"
-    It carries the board's own supply from J1, to power the sensor. A 5 V sensor's supply goes to your 5 V source, and only its GND and SIG go to the header. Keep the total load across all four headers to 500 mA or less, and within your host's 3.3 V rating. That suits sensor modules, but not motors, relays or gas-sensor heaters.
+    It carries the board's own supply from J1, to power the sensor. A 5 V sensor's supply goes to your 5 V source, and only its GND and SIG go to the header. Keep the total load across all four headers to 500 mA or less, and within your host's 3.3 V rating. That suits sensor modules, but not motors, relays or gas-sensor heaters. The sensor supply has no fuse: A short between a header's VDD and GND pulls down the host's 3.3 V supply and resets the host.
 
 ## Solder jumpers
 

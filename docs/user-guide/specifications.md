@@ -8,6 +8,7 @@ Run the PinGoblin ADS1115 from 2.7–5.25 V, and keep every input between 0 V an
 - **Never power the board from 5 V when it is wired to a Raspberry Pi or ESP32.** Their I²C pins are 3.3 V only.
 - **Never swap VDD and GND.** The board has no reverse-polarity protection.
 - **Never connect a supply to VDD on a sensor header (J2–J5).** It is the board's supply output.
+- **Never draw more than 500 mA from the sensor headers, or short a header's VDD to GND.** The sensor supply has no fuse: It comes straight from the host's 3.3 V pin, and a short or an overload pulls that supply down and resets the host.
 - **Never put more than 5.5 V on VDD, or more than ±15 V on a SIG pin.**
 - **Connect and disconnect J1 with the power off.**
 - **Disconnect power before closing or cutting solder jumpers.**
@@ -32,7 +33,7 @@ The host's 3.3 V pin supplies everything below. Add the rows that apply and chec
 | Board, idle | 5 µA (final figure after prototype testing) |
 | Board, while converting | 300 µA maximum |
 | Each channel with its RES jumper closed | 0.33 mA maximum (sensor shorted) |
-| Sensors powered from J2–J5 | Your sensors' own current. 500 mA maximum through the board |
+| Sensors powered from J2–J5 | Your sensors' own current. 500 mA maximum, all headers combined, and within your host's 3.3 V rating. No fuse |
 | SDA, SCL and RDY pulled low | 0.33 mA each, only while low |
 
 ## Operating conditions

@@ -169,7 +169,8 @@ class TestDocumentationStyle(unittest.TestCase):
     def test_damaging_actions_have_danger_boxes_and_safety_rules(self):
         spec = read(os.path.join(fakes.DOCS_DIR, "user-guide", "specifications.md"))
         for rule in ("Never connect the board to mains", "Never power the board from 5 V", "Never swap VDD and GND",
-                     "Never connect a supply to VDD on a sensor header", "Never put more than 5.5 V on VDD"):
+                     "Never connect a supply to VDD on a sensor header", "Never put more than 5.5 V on VDD",
+                     "Never draw more than 500 mA from the sensor headers, or short a header's VDD to GND"):
             with self.subTest(rule=rule):
                 self.assertIn("**" + rule, spec)
         layout = read(os.path.join(fakes.DOCS_DIR, "user-guide", "board-layout.md"))
