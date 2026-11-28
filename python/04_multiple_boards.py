@@ -14,8 +14,8 @@ Give every board a different address with the solder jumpers:
 | C | Cut JP1, close JP3 | 0x4A |
 | D | Cut JP1, close JP4 | 0x4B |
 
-Daisy-chain the boards with Qwiic cables (J6 to J7 of the next board). `i2cdetect -y 1`
-lists the addresses the Pi can see.
+Wire pins 1–4 of every board's J1 (VDD, GND, SCL, SDA) in parallel to the Pi.
+`i2cdetect -y 1` lists the addresses the Pi can see. Up to four boards can share the Pi's bus.
 """
 import time
 

@@ -39,7 +39,7 @@ Copy `ads1115.py` to the board with Thonny or `mpremote cp ads1115.py :`, or ins
 from machine import I2C, Pin
 from ads1115 import ADS1115
 
-i2c = I2C(0, scl=Pin(22), sda=Pin(21), freq=400_000)   # ESP32 defaults
+i2c = I2C(0, scl=Pin(22), sda=Pin(21), freq=100_000)   # ESP32 defaults
 adc = ADS1115(i2c, address=0x48, fsr=4.096, rate=128)
 print([adc.read_voltage(ch) for ch in range(4)])
 ```

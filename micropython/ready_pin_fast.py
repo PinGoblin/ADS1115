@@ -1,8 +1,10 @@
 """ESP32 MicroPython example: fast sampling with the RDY pin.
 
 Instead of waiting a fixed time, the ADS1115 pulls RDY low the moment each conversion
-finishes, and the ESP32 catches that edge with an interrupt. Samples CH0 at 860 samples/s
-for 2 seconds and prints the statistics.
+finishes, and the ESP32 catches that edge with an interrupt. Samples CH0 at the 860 samples/s
+data rate for 2 seconds and prints the statistics. Reading each result over I²C adds time, so
+the achieved rate is lower at 100 kHz; add 2.2–4.7 kΩ pull-ups from SDA and SCL to 3.3 V and
+set `freq=400_000` to get closer to 860.
 
 **Extra wiring:** breakout J1 pin 5 (RDY) to ESP32 GPIO4. The board already has a
 10 kΩ pull-up on RDY.
@@ -14,7 +16,7 @@ from machine import I2C, Pin
 
 from ads1115 import ADS1115
 
-i2c = I2C(0, scl=Pin(22), sda=Pin(21), freq=400_000)
+i2c = I2C(0, scl=Pin(22), sda=Pin(21), freq=100_000)
 adc = ADS1115(i2c, fsr=4.096, rate=860)
 adc.enable_ready_pin()
 

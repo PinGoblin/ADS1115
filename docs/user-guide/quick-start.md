@@ -1,6 +1,6 @@
 # Quick start
 
-Power the board from 3.3 V, connect four wires (or one Qwiic cable), install the library and run the first example. The board appears at I²C address 0x48 out of the box.
+Power the board from 3.3 V, connect four wires, install the library and run the first example. The board appears at I²C address 0x48 out of the box.
 
 ## Raspberry Pi wiring (J1)
 
@@ -14,7 +14,7 @@ Power the board from 3.3 V, connect four wires (or one Qwiic cable), install the
 
 ## ESP32 DevKit wiring (J1)
 
-VDD to 3V3, GND to GND, SCL to GPIO22, SDA to GPIO21. Boards with a Qwiic or STEMMA QT port can use a cable to J6 or J7 instead.
+VDD to 3V3, GND to GND, SCL to GPIO22, SDA to GPIO21.
 
 ## Raspberry Pi software
 

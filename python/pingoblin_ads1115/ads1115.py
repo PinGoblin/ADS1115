@@ -61,6 +61,8 @@ class ADS1115:
         address (int): The board's I²C address.
         fsr (float): Full-scale range (±V). Can be changed between reads.
         rate (int): Samples per second. Can be changed between reads.
+        clipped (bool): `True` if any conversion in the most recent read hit full scale
+            (±`fsr`), so the input may be beyond the range. Use a larger `fsr` if it is.
     """
 
     def __init__(self, bus: int | object = 1, address: int = 0x48, fsr: float = 4.096, rate: int = 128):
@@ -81,6 +83,7 @@ class ADS1115:
         self.fsr = fsr
         self.rate = rate
         self._comp = _COMP_DISABLE
+        self.clipped = False
         self._lock = threading.RLock()
 
     # -- low level ---------------------------------------------------------
@@ -104,6 +107,8 @@ class ADS1115:
                     break
                 time.sleep(0.0001)
             raw = self._read(_REG_CONVERSION)
+            if raw in (0x7FFF, 0x8000):
+                self.clipped = True
         return raw - 0x10000 if raw & 0x8000 else raw
 
     # -- public API --------------------------------------------------------
@@ -122,6 +127,7 @@ class ADS1115:
         """
         if channel not in (0, 1, 2, 3):
             raise ValueError("channel must be 0-3")
+        self.clipped = False
         return self._convert(_MUX_SINGLE[channel])
 
     def read_voltage(self, channel: int, samples: int = 1) -> float:
@@ -132,15 +138,18 @@ class ADS1115:
             samples: Number of conversions to average.
 
         Returns:
-            Mean voltage (V).
+            Mean voltage (V). Check `clipped` to see whether any conversion hit full scale.
 
         Raises:
             ValueError: If `channel` is not 0 to 3.
             OSError: If the board does not answer on the I²C bus.
         """
+        if channel not in (0, 1, 2, 3):
+            raise ValueError("channel must be 0-3")
+        self.clipped = False
         total = 0
         for _ in range(samples):
-            total += self.read_raw(channel)
+            total += self._convert(_MUX_SINGLE[channel])
         return total / samples * self.fsr / 32768
 
     def read_differential(self, pos: int, neg: int, samples: int = 1) -> float:
@@ -162,6 +171,7 @@ class ADS1115:
         """
         if (pos, neg) not in _MUX_DIFF:
             raise ValueError("differential pair must be (0, 1), (0, 3), (1, 3) or (2, 3)")
+        self.clipped = False
         total = 0
         for _ in range(samples):
             total += self._convert(_MUX_DIFF[(pos, neg)])
@@ -171,7 +181,7 @@ class ADS1115:
         """Make the RDY pin pulse low each time a conversion finishes.
 
         RDY is J1 pin 5 (the chip's ALERT/RDY pin), pulled up to VDD on the board. Wire it to
-        a GPIO and watch for the falling edge. The Qwiic connectors do not carry RDY.
+        a GPIO and watch for the falling edge. Each board needs its own GPIO.
         """
         with self._lock:
             self._write(_REG_HI_THRESH, 0x8000)
@@ -198,6 +208,7 @@ class ADS1115:
         """
         with self._lock:
             raw = self._read(_REG_CONVERSION)
+        self.clipped = raw in (0x7FFF, 0x8000)
         raw = raw - 0x10000 if raw & 0x8000 else raw
         return raw * self.fsr / 32768
 

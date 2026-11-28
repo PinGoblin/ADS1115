@@ -13,7 +13,7 @@ Example:
     from machine import I2C, Pin
     from ads1115 import ADS1115
 
-    i2c = I2C(0, scl=Pin(22), sda=Pin(21), freq=400_000)   # ESP32 defaults
+    i2c = I2C(0, scl=Pin(22), sda=Pin(21), freq=100_000)   # ESP32 defaults
     adc = ADS1115(i2c)                  # address 0x48, ±4.096 V, 128 samples/s
     print(adc.read_voltage(0))          # CH0 (header J2), volts
     ```
@@ -44,7 +44,8 @@ class ADS1115:
     """One ADS1115 breakout on an I²C bus.
 
     Args:
-        i2c (machine.I2C): A `machine.I2C` (or `SoftI2C`) object. 100 kHz and 400 kHz both work.
+        i2c (machine.I2C): A `machine.I2C` (or `SoftI2C`) object. Use 100 kHz with only the
+            board's 10 kΩ pull-ups; 400 kHz needs 2.2–4.7 kΩ pull-ups to 3.3 V at the host.
         address: I²C address set by the address jumpers: `0x48` (default), `0x49`, `0x4A` or `0x4B`.
         fsr: Full-scale range (±V): 6.144, 4.096, 2.048, 1.024, 0.512 or 0.256.
             Use 4.096 on a 3.3 V board.
@@ -58,6 +59,8 @@ class ADS1115:
         address (int): The board's I²C address.
         fsr (float): Full-scale range (±V). Can be changed between reads.
         rate (int): Samples per second. Can be changed between reads.
+        clipped (bool): `True` if any conversion in the most recent read hit full scale
+            (±`fsr`), so the input may be beyond the range. Use a larger `fsr` if it is.
     """
 
     def __init__(self, i2c, address: int = 0x48, fsr: float = 4.096, rate: int = 128):
@@ -72,6 +75,7 @@ class ADS1115:
         self.fsr = fsr
         self.rate = rate
         self._comp = _COMP_DISABLE
+        self.clipped = False
         self._buf = bytearray(2)
 
     # -- low level ---------------------------------------------------------
@@ -96,6 +100,8 @@ class ADS1115:
                 break
             time.sleep_us(100)
         raw = self._read(_REG_CONVERSION)
+        if raw in (0x7FFF, 0x8000):
+            self.clipped = True
         return raw - 0x10000 if raw & 0x8000 else raw
 
     # -- public API --------------------------------------------------------
@@ -114,6 +120,7 @@ class ADS1115:
         """
         if channel not in (0, 1, 2, 3):
             raise ValueError("channel must be 0-3")
+        self.clipped = False
         return self._convert(_MUX_SINGLE[channel])
 
     def read_voltage(self, channel: int, samples: int = 1) -> float:
@@ -124,14 +131,18 @@ class ADS1115:
             samples: Number of conversions to average.
 
         Returns:
-            Mean voltage (V).
+            Mean voltage (V). Check `clipped` to see whether any conversion hit full scale.
 
         Raises:
+            ValueError: If `channel` is not 0 to 3.
             OSError: If the board does not answer on the I²C bus.
         """
+        if channel not in (0, 1, 2, 3):
+            raise ValueError("channel must be 0-3")
+        self.clipped = False
         total = 0
         for _ in range(samples):
-            total += self.read_raw(channel)
+            total += self._convert(_MUX_SINGLE[channel])
         return total / samples * self.fsr / 32768
 
     def read_differential(self, pos: int, neg: int, samples: int = 1) -> float:
@@ -153,6 +164,7 @@ class ADS1115:
         """
         if (pos, neg) not in _MUX_DIFF:
             raise ValueError("differential pair must be (0, 1), (0, 3), (1, 3) or (2, 3)")
+        self.clipped = False
         total = 0
         for _ in range(samples):
             total += self._convert(_MUX_DIFF[(pos, neg)])
@@ -162,8 +174,7 @@ class ADS1115:
         """Make the RDY pin pulse low each time a conversion finishes.
 
         RDY is J1 pin 5 (the chip's ALERT/RDY pin), pulled up to VDD on the board. Wire it to
-        a GPIO and trigger an interrupt on the falling edge. The Qwiic connectors do not
-        carry RDY.
+        a GPIO and trigger an interrupt on the falling edge. Each board needs its own GPIO.
         """
         self._write(_REG_HI_THRESH, 0x8000)
         self._write(_REG_LO_THRESH, 0x0000)
@@ -188,5 +199,6 @@ class ADS1115:
             Voltage (V) from the conversion register, scaled by `fsr`.
         """
         raw = self._read(_REG_CONVERSION)
+        self.clipped = raw in (0x7FFF, 0x8000)
         raw = raw - 0x10000 if raw & 0x8000 else raw
         return raw * self.fsr / 32768
