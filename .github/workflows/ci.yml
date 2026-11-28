@@ -11,15 +11,18 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Raspberry Pi OS Bookworm (3.11) and Trixie (3.13); the runners no longer provide 3.9
+        python-version: ["3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
-          python-version: "3.12"
-      - name: Raspberry Pi package and examples (simulated ADS1115 on a fake smbus2 bus)
-        run: python3 tests/test_python.py
-      - name: MicroPython module (simulated ADS1115)
-        run: python3 tests/test_micropython.py
+          python-version: ${{ matrix.python-version }}
+      - name: Unit tests (simulated ADS1115, standard library only)
+        run: python -m unittest discover -s tests -v
 
   docs:
     runs-on: ubuntu-latest

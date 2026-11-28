@@ -1,4 +1,4 @@
-# Raspberry Pi package: pingoblin_ads1115
+# Raspberry Pi package: `pingoblin_ads1115`
 
 ::: pingoblin_ads1115
     options:

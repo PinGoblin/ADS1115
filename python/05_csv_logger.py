@@ -10,6 +10,8 @@ in a spreadsheet to chart it. Press Ctrl+C to stop.
 python3 05_csv_logger.py                 # every 5 s to ads_log.csv
 python3 05_csv_logger.py 60 garden.csv   # every 60 s to garden.csv
 ```
+
+Run with `--mock` to try it without hardware.
 """
 import csv
 import os
@@ -17,12 +19,15 @@ import sys
 import time
 from datetime import datetime
 
-from pingoblin_ads1115 import ADS1115, load_calibration, apply_calibration
+from pingoblin_ads1115 import (ADS1115, BusError, InputRangeError, MockBus, apply_calibration,
+                               load_calibration)
 
-interval = float(sys.argv[1]) if len(sys.argv) > 1 else 5.0
-path = sys.argv[2] if len(sys.argv) > 2 else "ads_log.csv"
+args = [a for a in sys.argv[1:] if a != "--mock"]
+interval = float(args[0]) if len(args) > 0 else 5.0
+path = args[1] if len(args) > 1 else "ads_log.csv"
 
-adc = ADS1115(fsr=4.096, rate=128)
+bus = MockBus() if "--mock" in sys.argv else 1   # --mock: a simulated board, no hardware
+adc = ADS1115(bus, fsr=4.096, rate=128)
 cal = load_calibration()
 
 new_file = not os.path.exists(path)
@@ -30,16 +35,22 @@ with open(path, "a", newline="") as f:
     writer = csv.writer(f)
     if new_file:
         writer.writerow(["timestamp", "ch0_V", "ch1_V", "ch2_V", "ch3_V"])
-    print(f"Logging every {interval:g} s to {path} - Ctrl+C to stop")
+    print(f"Logging every {interval:g} s to {path}: Press Ctrl+C to stop")
     try:
         while True:
             start = time.monotonic()
             row = [datetime.now().isoformat(timespec="seconds")]
             for ch in range(4):
-                row.append(f"{apply_calibration(adc.read_voltage(ch, samples=16), ch, cal):.5f}")
+                try:
+                    row.append(f"{apply_calibration(adc.read_voltage(ch, samples=16), ch, cal):.5f}")
+                except InputRangeError as exc:
+                    print(exc)
+                    row.append("")                 # an empty cell marks an invalid reading
             writer.writerow(row)
             f.flush()
             print(", ".join(row))
             time.sleep(max(0.0, interval - (time.monotonic() - start)))
+    except BusError as exc:
+        raise SystemExit(exc)
     except KeyboardInterrupt:
         pass

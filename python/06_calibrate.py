@@ -13,29 +13,37 @@ tolerance (typically 0.1–0.2 %).
 
 The factor is saved to `calibration.json` and applied automatically by the other
 examples. Repeat for each channel you use.
+
+Run with `--mock` to try it without hardware.
 """
 import sys
 
-from pingoblin_ads1115 import ADS1115, load_calibration, save_calibration
+from pingoblin_ads1115 import (ADS1115, BusError, InputRangeError, MockBus, load_calibration,
+                               save_calibration)
 
-if len(sys.argv) != 3:
+args = [a for a in sys.argv[1:] if a != "--mock"]
+if len(args) != 2:
     raise SystemExit(__doc__)
 
-ch = int(sys.argv[1])
-true_v = float(sys.argv[2])
+ch = int(args[0])
+true_v = float(args[1])
 if ch not in range(4) or not 0.5 <= true_v <= 5.5:
     raise SystemExit("Channel must be 0-3 and voltage 0.5-5.5 V")
 
-adc = ADS1115(fsr=4.096, rate=8)           # slowest rate = lowest noise
-measured = adc.read_voltage(ch, samples=32)
+bus = MockBus() if "--mock" in sys.argv else 1   # --mock: a simulated board, no hardware
+adc = ADS1115(bus, fsr=4.096, rate=8)            # slowest rate = lowest noise
+try:
+    measured = adc.read_voltage(ch, samples=32)
+except (BusError, InputRangeError) as exc:
+    raise SystemExit(exc)
 if measured < 0.25:
-    raise SystemExit(f"CH{ch} reads {measured:.4f} V - is the voltage connected?")
+    raise SystemExit(f"CH{ch} reads {measured:.4f} V: Check the voltage is connected")
 
 factor = true_v / measured
 if not 0.97 <= factor <= 1.03:
-    raise SystemExit(f"Factor {factor:.5f} is outside +/-3 % - check the wiring and meter")
+    raise SystemExit(f"Factor {factor:.5f} is outside ±3 %: Check the wiring and the meter")
 
 cal = load_calibration()
 cal[str(ch)] = round(factor, 6)
 save_calibration(cal)
-print(f"CH{ch}: measured {measured:.5f} V, true {true_v:.5f} V -> factor {factor:.5f} saved")
+print(f"CH{ch}: Measured {measured:.5f} V, true {true_v:.5f} V, factor {factor:.5f} saved")

@@ -1,6 +1,6 @@
-# PinGoblin ADS1115 – 4-channel 16-bit ADC breakout
+# PinGoblin ADS1115 – 4-channel 16-bit ADC board
 
-A breakout board that adds four 16-bit analogue inputs to a Raspberry Pi, ESP32 or any other I²C host. It uses the TI ADS1115, has a 3-pin sensor header (GND, VDD, SIG) per channel, protected inputs, solder-jumper configuration for resistive sensors, and an idle current under 5 µA.
+The PinGoblin ADS1115 adds four 16-bit analogue inputs to a Raspberry Pi, ESP32 or any other I²C host. It uses the TI ADS1115, and has a 3-pin sensor header (GND, VDD, SIG) per channel, protected inputs, solder-jumper configuration for resistive sensors and a 5 µA idle current.
 
 **Documentation:** https://pingoblin.github.io/ADS1115/ (user guide and API reference)
 
@@ -8,10 +8,10 @@ A breakout board that adds four 16-bit analogue inputs to a Raspberry Pi, ESP32 
 
 | Folder | What it is |
 |---|---|
-| [`python/`](python/) | Raspberry Pi: the `pingoblin_ads1115` package (built on `smbus2`) and six example scripts |
+| [`python/`](python/) | Raspberry Pi: The `pingoblin_ads1115` package (built on `smbus2`) and six example scripts |
 | [`micropython/`](micropython/) | ESP32 / MicroPython: `ads1115.py` module with no dependencies, plus two examples |
 | [`docs/`](docs/) | MkDocs source for the documentation site |
-| [`tests/`](tests/) | Hardware-free tests for both modules |
+| [`tests/`](tests/) | Unit tests for both libraries, every example and the docs, on simulated hardware |
 
 ## Quick start (Raspberry Pi)
 
@@ -29,14 +29,14 @@ Copy `micropython/ads1115.py` and `micropython/main.py` to the board (Thonny, or
 
 ## Wiring
 
-J1 VDD → 3V3, GND → GND, SCL → SCL, SDA → SDA. Power the board from **3.3 V** when it is wired to a Raspberry Pi or ESP32: their I²C pins are not 5 V tolerant.
+J1 pin 1 GND → GND, pin 2 VDD → 3V3, pin 3 SCL → SCL, pin 4 SDA → SDA. Power the board from **3.3 V** when it is wired to a Raspberry Pi or ESP32: Their I²C pins are not 5 V tolerant.
 
 | RES jumper (per channel) | Sensor type |
 |---|---|
-| Open (default) | Voltage-output sensors and modules (0 V to VDD): analogue modules, potentiometers, TMP36 |
-| Closed | Bare resistive sensors between SIG and GND: 10 k NTC thermistor, LDR, FSR, flex sensor |
+| Open (default) | Voltage-output sensors and modules (0 V to VDD): Analogue modules, potentiometers, TMP36 |
+| Closed | Bare resistive sensors between SIG and GND: 10 kΩ NTC thermistor, LDR, FSR, flex sensor |
 
-I²C address: 0x48 by default (JP1). Move the address jumper to JP2, JP3 or JP4 for 0x49, 0x4A or 0x4B, so up to four boards share one bus (use 0x4A last).
+I²C address 0x48 by default (JP1). Move the address jumper to JP2, JP3 or JP4 for 0x49, 0x4A or 0x4B, so up to four boards share one bus (use 0x4A last).
 
 ## Documentation
 
@@ -48,6 +48,14 @@ mkdocs serve
 ```
 
 Docstrings use the Google style with Markdown, and are rendered into the API reference by mkdocstrings.
+
+## Tests
+
+The tests use only the Python standard library and simulated hardware: A register-level ADS1115 model, a fake `smbus2`, and fake MicroPython `machine` and `time` modules. They cover both libraries, every example (with and without `--mock`), and checks that the docs match the code and the documentation style rules. CI runs them on Python 3.11, 3.12 and 3.13.
+
+```bash
+python3 -m unittest discover -s tests
+```
 
 ## Licence
 

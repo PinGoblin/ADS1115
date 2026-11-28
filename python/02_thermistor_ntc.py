@@ -13,42 +13,51 @@
 - set `VDD_CHANNEL` to a spare channel and link that header's VDD pin to its SIG pin with
   a jumper wire (RES open). The script then measures VDD live.
 - Set `R0`, `T0_C` and `BETA` from your thermistor's datasheet.
+
+Run with `--mock` to try it without hardware.
 """
+import sys
 import time
 
-from pingoblin_ads1115 import (ADS1115, resistance_from_voltage, ntc_celsius,
-                               load_calibration, apply_calibration)
+from pingoblin_ads1115 import (ADS1115, BusError, InputRangeError, MockBus, apply_calibration,
+                               load_calibration, ntc_celsius, resistance_from_voltage)
 
 NTC_CHANNEL = 0        # CH0 = J2, RES jumper JP5 closed
 VDD = 3.30             # your measured supply voltage
-VDD_CHANNEL = None     # e.g. 3 to measure VDD live on CH3 (J5 VDD linked to SIG)
+VDD_CHANNEL = None     # for example 3, to measure VDD live on CH3 (J5 VDD linked to SIG)
 
 # Thermistor datasheet values
 R0 = 10_000.0          # resistance at T0
 T0_C = 25.0
 BETA = 3950.0          # check your part: 3380, 3435 and 3950 are all common
 
-R_OPEN = 5_000_000     # above this the thermistor is treated as disconnected (a 10 k NTC is ~1 M at -55 C)
+R_OPEN = 5_000_000     # above this the thermistor is treated as disconnected (a 10 k NTC is 1 M at -55 C)
 
-adc = ADS1115(fsr=4.096)
+bus = MockBus() if "--mock" in sys.argv else 1   # --mock: a simulated board, no hardware
+adc = ADS1115(bus, fsr=4.096)
 cal = load_calibration()
 
 try:
     while True:
-        vdd = VDD
-        if VDD_CHANNEL is not None:
-            vdd = apply_calibration(adc.read_voltage(VDD_CHANNEL, samples=8), VDD_CHANNEL, cal)
-        v = apply_calibration(adc.read_voltage(NTC_CHANNEL, samples=16), NTC_CHANNEL, cal)
-        if adc.clipped:
-            print("Reading at full scale: on a 5 V board use ADS1115(fsr=6.144)")
-        r = resistance_from_voltage(v, vdd)
-        if r > R_OPEN:
-            print("Open circuit - is the thermistor connected and RES closed?")
-        elif r < 50:
-            print("Short circuit - check the thermistor wiring")
+        try:
+            vdd = VDD
+            if VDD_CHANNEL is not None:
+                vdd = apply_calibration(adc.read_voltage(VDD_CHANNEL, samples=8), VDD_CHANNEL, cal)
+            v = apply_calibration(adc.read_voltage(NTC_CHANNEL, samples=16), NTC_CHANNEL, cal)
+        except InputRangeError as exc:
+            print(exc)
         else:
-            t = ntc_celsius(r, R0, T0_C, BETA)
-            print(f"V={v:.4f} V  VDD={vdd:.3f} V  R={r/1000:7.3f} k  T={t:6.2f} C")
+            r = resistance_from_voltage(v, vdd)
+            if r > R_OPEN:
+                print("Open circuit: Check the thermistor is connected and the RES jumper is closed")
+            elif r < 50:
+                print(f"CH{NTC_CHANNEL} reads 0 V: Close the RES jumper JP{5 + NTC_CHANNEL} for a bare "
+                      "thermistor, or check that the thermistor is not shorted")
+            else:
+                t = ntc_celsius(r, R0, T0_C, BETA)
+                print(f"V={v:.4f} V  VDD={vdd:.3f} V  R={r/1000:7.3f} k  T={t:6.2f} C")
         time.sleep(1)
+except BusError as exc:
+    raise SystemExit(exc)
 except KeyboardInterrupt:
     pass

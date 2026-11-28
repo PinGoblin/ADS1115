@@ -1,7 +1,7 @@
 """ADS1115 driver for the Raspberry Pi and other Linux boards, built on `smbus2`.
 
 Talks to the chip directly over I²C, with the same methods as the MicroPython
-[`ads1115`][ads1115] module. It is thread-safe: one conversion runs at a time, so several
+[`ads1115`][ads1115] module. It is thread-safe: One conversion runs at a time, so several
 threads (for example a motor library's fault monitor and your own code) can share one board.
 """
 from __future__ import annotations
@@ -27,13 +27,40 @@ _OS_START = 0x8000
 _MODE_SINGLE = 0x0100
 _COMP_DISABLE = 0x0003
 _COMP_ASSERT_1 = 0x0000   # ALERT/RDY asserts after every conversion (ready mode)
+_FULL_SCALE = (32767, -32768)
 
 ADDRESSES = (0x48, 0x49, 0x4A, 0x4B)
 """Valid I²C addresses: 0x48 (JP1, default), 0x49 (JP2), 0x4A (JP3) and 0x4B (JP4)."""
 
 
+class BusError(OSError):
+    """The board did not answer on the I²C bus.
+
+    A subclass of `OSError`, so code that already catches `OSError` still works. The message
+    names the address and says what to check.
+    """
+
+
+class InputRangeError(ValueError):
+    """A reading reached the full-scale range (±`fsr`), so its value is not valid.
+
+    The input is beyond the range set with `fsr`. The message says which range to use instead.
+    """
+
+
+def _range_message(what: str, fsr: float) -> str:
+    larger = [f for f in sorted(_PGA) if f > fsr]
+    if larger:
+        fix = f"Use a larger range, for example ADS1115(fsr={larger[0]:g})"
+        if fsr == 4.096:
+            fix += " on a board powered from 5 V"
+    else:
+        fix = "Keep every input between 0 V and VDD"
+    return f"{what} is at the ±{fsr:g} V full-scale limit, so the reading is not valid: {fix}"
+
+
 class ADS1115:
-    """One ADS1115 board on an I²C bus.
+    """One PinGoblin ADS1115 board on an I²C bus.
 
     Example:
         ```python
@@ -45,11 +72,12 @@ class ADS1115:
 
     Args:
         bus: I²C bus number (1 on a Raspberry Pi), or an open bus object with
-            `write_i2c_block_data()` and `read_i2c_block_data()`, such as `smbus2.SMBus`.
+            `write_i2c_block_data()` and `read_i2c_block_data()`, such as `smbus2.SMBus` or
+            [`MockBus`][pingoblin_ads1115.MockBus].
         address: I²C address set by the address jumpers: `0x48` (default), `0x49`, `0x4A`
             or `0x4B`.
         fsr: Full-scale range (±V): 6.144, 4.096, 2.048, 1.024, 0.512 or 0.256.
-            Use 4.096 on a 3.3 V board.
+            Use 4.096 on a 3.3 V board and 6.144 on a 5 V board.
         rate: Samples per second: 8, 16, 32, 64, 128, 250, 475 or 860.
             Slower rates give lower noise.
 
@@ -61,13 +89,11 @@ class ADS1115:
         address (int): The board's I²C address.
         fsr (float): Full-scale range (±V). Can be changed between reads.
         rate (int): Samples per second. Can be changed between reads.
-        clipped (bool): `True` if any conversion in the most recent read hit full scale
-            (±`fsr`), so the input may be beyond the range. Use a larger `fsr` if it is.
     """
 
     def __init__(self, bus: int | object = 1, address: int = 0x48, fsr: float = 4.096, rate: int = 128):
         if address not in ADDRESSES:
-            raise ValueError("address must be one of 0x48, 0x49, 0x4A or 0x4B")
+            raise ValueError("address must be 0x48, 0x49, 0x4A or 0x4B (set by the address jumpers)")
         if fsr not in _PGA:
             raise ValueError(f"fsr must be one of {sorted(_PGA)}")
         if rate not in _DR:
@@ -83,15 +109,25 @@ class ADS1115:
         self.fsr = fsr
         self.rate = rate
         self._comp = _COMP_DISABLE
-        self.clipped = False
+        self._started = 0
         self._lock = threading.RLock()
 
     # -- low level ---------------------------------------------------------
+    def _bus_error(self, exc: OSError) -> BusError:
+        return BusError(f"No answer from the board at 0x{self.address:02X} ({exc}): Check the J1 "
+                        "wiring, the power and the address jumpers")
+
     def _write(self, reg: int, value: int) -> None:
-        self._bus.write_i2c_block_data(self.address, reg, [(value >> 8) & 0xFF, value & 0xFF])
+        try:
+            self._bus.write_i2c_block_data(self.address, reg, [(value >> 8) & 0xFF, value & 0xFF])
+        except OSError as exc:
+            raise self._bus_error(exc) from exc
 
     def _read(self, reg: int) -> int:
-        hi, lo = self._bus.read_i2c_block_data(self.address, reg, 2)
+        try:
+            hi, lo = self._bus.read_i2c_block_data(self.address, reg, 2)
+        except OSError as exc:
+            raise self._bus_error(exc) from exc
         return (hi << 8) | lo
 
     def _config(self, mux: int) -> int:
@@ -107,9 +143,14 @@ class ADS1115:
                     break
                 time.sleep(0.0001)
             raw = self._read(_REG_CONVERSION)
-            if raw in (0x7FFF, 0x8000):
-                self.clipped = True
         return raw - 0x10000 if raw & 0x8000 else raw
+
+    def _average(self, mux: int, samples: int, what: str) -> float:
+        fsr = self.fsr
+        raws = [self._convert(mux) for _ in range(samples)]
+        if any(r in _FULL_SCALE for r in raws):
+            raise InputRangeError(_range_message(what, fsr))
+        return sum(raws) / samples * fsr / 32768
 
     # -- public API --------------------------------------------------------
     def read_raw(self, channel: int) -> int:
@@ -119,15 +160,21 @@ class ADS1115:
             channel: Channel number, 0 to 3 (CH0 is header J2, CH3 is J5).
 
         Returns:
-            Signed 16-bit result, −32768 to 32767. Full scale (32767) equals `fsr`.
+            Signed 16-bit result, −32768 to 32767. 32767 means the input is at or above `fsr`;
+            [`read_voltage()`][pingoblin_ads1115.ADS1115.read_voltage] raises
+            `InputRangeError` instead.
 
         Raises:
             ValueError: If `channel` is not 0 to 3.
-            OSError: If the board does not answer on the I²C bus.
+            BusError: If the board does not answer on the I²C bus.
+
+        Example:
+            ```python
+            raw = adc.read_raw(0)            # 13200 at 1.65 V with fsr=4.096
+            ```
         """
         if channel not in (0, 1, 2, 3):
-            raise ValueError("channel must be 0-3")
-        self.clipped = False
+            raise ValueError("channel must be 0-3 (CH0 is J2, CH3 is J5)")
         return self._convert(_MUX_SINGLE[channel])
 
     def read_voltage(self, channel: int, samples: int = 1) -> float:
@@ -138,19 +185,21 @@ class ADS1115:
             samples: Number of conversions to average.
 
         Returns:
-            Mean voltage (V). Check `clipped` to see whether any conversion hit full scale.
+            Mean voltage (V).
 
         Raises:
             ValueError: If `channel` is not 0 to 3.
-            OSError: If the board does not answer on the I²C bus.
+            InputRangeError: If any conversion reached the full-scale range.
+            BusError: If the board does not answer on the I²C bus.
+
+        Example:
+            ```python
+            volts = adc.read_voltage(0, samples=16)
+            ```
         """
         if channel not in (0, 1, 2, 3):
-            raise ValueError("channel must be 0-3")
-        self.clipped = False
-        total = 0
-        for _ in range(samples):
-            total += self._convert(_MUX_SINGLE[channel])
-        return total / samples * self.fsr / 32768
+            raise ValueError("channel must be 0-3 (CH0 is J2, CH3 is J5)")
+        return self._average(_MUX_SINGLE[channel], samples, f"CH{channel}")
 
     def read_differential(self, pos: int, neg: int, samples: int = 1) -> float:
         """Read the voltage between two inputs.
@@ -163,25 +212,36 @@ class ADS1115:
             samples: Number of conversions to average.
 
         Returns:
-            Mean voltage `pos − neg` (V); can be negative.
+            Mean voltage `pos − neg` (V). It can be negative.
 
         Raises:
             ValueError: If the pair is not one the ADS1115 supports.
-            OSError: If the board does not answer on the I²C bus.
+            InputRangeError: If any conversion reached the full-scale range.
+            BusError: If the board does not answer on the I²C bus.
+
+        Example:
+            ```python
+            shunt_volts = adc.read_differential(0, 1)
+            ```
         """
         if (pos, neg) not in _MUX_DIFF:
             raise ValueError("differential pair must be (0, 1), (0, 3), (1, 3) or (2, 3)")
-        self.clipped = False
-        total = 0
-        for _ in range(samples):
-            total += self._convert(_MUX_DIFF[(pos, neg)])
-        return total / samples * self.fsr / 32768
+        return self._average(_MUX_DIFF[(pos, neg)], samples, f"CH{pos}−CH{neg}")
 
     def enable_ready_pin(self) -> None:
         """Make the RDY pin pulse low each time a conversion finishes.
 
         RDY is J1 pin 5 (the chip's ALERT/RDY pin), pulled up to VDD on the board. Wire it to
         a GPIO and watch for the falling edge. Each board needs its own GPIO.
+
+        Raises:
+            BusError: If the board does not answer on the I²C bus.
+
+        Example:
+            ```python
+            adc.enable_ready_pin()
+            adc.start(0)                     # RDY falls when the result is ready
+            ```
         """
         with self._lock:
             self._write(_REG_HI_THRESH, 0x8000)
@@ -196,21 +256,44 @@ class ADS1115:
 
         Args:
             channel: Channel number, 0 to 3.
+
+        Raises:
+            ValueError: If `channel` is not 0 to 3.
+            BusError: If the board does not answer on the I²C bus.
+
+        Example:
+            ```python
+            adc.start(2)
+            ```
         """
+        if channel not in (0, 1, 2, 3):
+            raise ValueError("channel must be 0-3 (CH0 is J2, CH3 is J5)")
         with self._lock:
             self._write(_REG_CONFIG, self._config(_MUX_SINGLE[channel]))
+            self._started = channel
 
     def result_voltage(self) -> float:
-        """Read the result of the last conversion.
+        """Read the result of the last conversion started with `start()`.
 
         Returns:
             Voltage (V) from the conversion register, scaled by `fsr`.
+
+        Raises:
+            InputRangeError: If the result reached the full-scale range.
+            BusError: If the board does not answer on the I²C bus.
+
+        Example:
+            ```python
+            volts = adc.result_voltage()
+            ```
         """
         with self._lock:
             raw = self._read(_REG_CONVERSION)
-        self.clipped = raw in (0x7FFF, 0x8000)
+            channel, fsr = self._started, self.fsr
         raw = raw - 0x10000 if raw & 0x8000 else raw
-        return raw * self.fsr / 32768
+        if raw in _FULL_SCALE:
+            raise InputRangeError(_range_message(f"CH{channel}", fsr))
+        return raw * fsr / 32768
 
     def close(self) -> None:
         """Close the I²C bus if this object opened it (when `bus` was a bus number)."""
@@ -234,6 +317,11 @@ def find_boards(bus: int | object = 1, addresses: tuple = ADDRESSES, **kwargs: f
 
     Returns:
         Dictionary of address to `ADS1115`, in address order. Empty if none answer.
+
+    Example:
+        ```python
+        boards = find_boards(fsr=4.096)      # {0x48: ADS1115, 0x49: ADS1115, ...}
+        ```
     """
     if isinstance(bus, int):
         from smbus2 import SMBus
@@ -243,10 +331,10 @@ def find_boards(bus: int | object = 1, addresses: tuple = ADDRESSES, **kwargs: f
         adc = ADS1115(bus, address=addr, **kwargs)
         try:
             adc.read_raw(0)
-        except OSError:
+        except BusError:
             continue
         found[addr] = adc
     return found
 
 
-__all__ = ["ADS1115", "ADDRESSES", "find_boards"]
+__all__ = ["ADS1115", "ADDRESSES", "BusError", "InputRangeError", "find_boards"]
