@@ -7,10 +7,10 @@ file to the ESP32, then reset it.
 
 | PinGoblin ADS1115 J1 | ESP32 |
 |---|---|
-| VDD (Required) | 3V3 |
-| GND (Required) | GND |
-| SCL (Required) | GPIO22 |
-| SDA (Required) | GPIO21 |
+| 1 GND (Required) | GND |
+| 2 VDD (Required) | 3V3 |
+| 3 SCL (Required) | GPIO22 |
+| 4 SDA (Required) | GPIO21 |
 
 **Board setup**
 
@@ -69,6 +69,9 @@ while True:
         v = [read(ch) for ch in range(4)]
     except BusError as exc:
         raise SystemExit(exc)
+    if v[0] is not None and v[0] < 0.016:   # below 50 Ω: RES jumper open, or a shorted thermistor
+        print("CH0 reads 0 V: Close the RES jumper JP5 for a bare thermistor, or check that the "
+              "thermistor is not shorted")
     t = None if v[0] is None else ntc_celsius(v[0])
     t_txt = "--.-" if t is None else "%.2f" % t
     v_txt = ["over" if x is None else "%.3f" % x for x in v[1:]]

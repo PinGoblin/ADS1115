@@ -21,7 +21,7 @@ Close exactly one address jumper.
 
 ## Several boards on one bus
 
-Give each board a different address and wire pins 1–4 of every board's J1 (VDD, GND, SCL, SDA) in parallel. Example [`04_multiple_boards.py`](../api/examples-python.md#04_multiple_boardspy) finds and reads all of them. To use RDY, wire each board's J1 pin 5 to its own GPIO. The examples poll instead, so RDY is optional.
+Give each board a different address and wire pins 1–4 of every board's J1 (GND, VDD, SCL, SDA) in parallel. Example [`04_multiple_boards.py`](../api/examples-python.md#04_multiple_boardspy) finds and reads all of them. To use RDY, wire each board's J1 pin 5 to its own GPIO. The examples poll instead, so RDY is optional.
 
 | Host | Boards on one bus | I²C clock |
 |---|---|---|

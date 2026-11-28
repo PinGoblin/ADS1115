@@ -51,7 +51,8 @@ try:
             if r > R_OPEN:
                 print("Open circuit: Check the thermistor is connected and the RES jumper is closed")
             elif r < 50:
-                print("Short circuit: Check the thermistor wiring")
+                print(f"CH{NTC_CHANNEL} reads 0 V: Close the RES jumper JP{5 + NTC_CHANNEL} for a bare "
+                      "thermistor, or check that the thermistor is not shorted")
             else:
                 t = ntc_celsius(r, R0, T0_C, BETA)
                 print(f"V={v:.4f} V  VDD={vdd:.3f} V  R={r/1000:7.3f} k  T={t:6.2f} C")

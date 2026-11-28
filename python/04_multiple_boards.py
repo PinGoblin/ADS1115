@@ -14,7 +14,7 @@ Give every board a different address with the solder jumpers:
 | C | Cut JP1, close JP3 | 0x4A |
 | D | Cut JP1, close JP4 | 0x4B |
 
-Wire pins 1–4 of every board's J1 (VDD, GND, SCL, SDA) in parallel to the Pi.
+Wire pins 1–4 of every board's J1 (GND, VDD, SCL, SDA) in parallel to the Pi.
 `i2cdetect -y 1` lists the addresses the Pi can see. Up to four boards can share the Pi's bus.
 
 Run with `--mock` to try it without hardware.

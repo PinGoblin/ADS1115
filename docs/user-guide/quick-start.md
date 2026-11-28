@@ -9,8 +9,8 @@ Power the PinGoblin ADS1115 from the host's 3.3 V pin, connect four wires, insta
 
 | PinGoblin ADS1115 J1 | Raspberry Pi header |
 |---|---|
-| 1 VDD **(Required)** | Pin 1 (3V3) |
-| 2 GND **(Required)** | Pin 6 (GND) |
+| 1 GND **(Required)** | Pin 6 (GND) |
+| 2 VDD **(Required)** | Pin 1 (3V3) |
 | 3 SCL **(Required)** | Pin 5 (GPIO3 / SCL) |
 | 4 SDA **(Required)** | Pin 3 (GPIO2 / SDA) |
 | 5 RDY (Optional) | Any free GPIO |
@@ -19,8 +19,8 @@ Power the PinGoblin ADS1115 from the host's 3.3 V pin, connect four wires, insta
 
 | PinGoblin ADS1115 J1 | ESP32 DevKit |
 |---|---|
-| 1 VDD **(Required)** | 3V3 |
-| 2 GND **(Required)** | GND |
+| 1 GND **(Required)** | GND |
+| 2 VDD **(Required)** | 3V3 |
 | 3 SCL **(Required)** | GPIO22 |
 | 4 SDA **(Required)** | GPIO21 |
 | 5 RDY (Optional) | GPIO4 (used by `ready_pin_fast.py`) |

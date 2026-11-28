@@ -64,6 +64,18 @@ class TestDocsSite(unittest.TestCase):
             with self.subTest(file=os.path.relpath(path, fakes.ROOT)):
                 self.assertEqual(pattern.findall(read(path)), [])
 
+    def test_every_header_has_gnd_on_pin_1(self):
+        layout = read(os.path.join(fakes.DOCS_DIR, "user-guide", "board-layout.md"))
+        self.assertIn("| 1 | GND **(Required)** | Host ground |", layout)
+        self.assertIn("| 2 | VDD **(Required)** |", layout)
+        for header in ("J2", "J3", "J4", "J5"):
+            self.assertRegex(layout, r"\| %s \| CH\d \(A\d\) \| GND \| VDD \| SIG \|" % header)
+        quick = read(os.path.join(fakes.DOCS_DIR, "user-guide", "quick-start.md"))
+        self.assertEqual(quick.count("| 1 GND **(Required)** |"), 2)
+        self.assertEqual(quick.count("| 2 VDD **(Required)** |"), 2)
+        spec = read(os.path.join(fakes.DOCS_DIR, "user-guide", "specifications.md"))
+        self.assertIn("Connect J1 pin 2 (VDD) to", spec)
+
     def test_published_limits(self):
         spec = read(os.path.join(fakes.DOCS_DIR, "user-guide", "specifications.md"))
         self.assertIn("| VDD | −0.3 V to 5.5 V |", spec)

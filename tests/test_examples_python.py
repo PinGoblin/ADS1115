@@ -102,7 +102,13 @@ class TestThermistor(_ExampleTestCase):
     def test_short_circuit(self):
         self.chip.volts[0] = 0.0
         _, out, _ = self.run_example("02_thermistor_ntc.py")
-        self.assertIn("Short circuit: Check the thermistor wiring", out)
+        self.assertIn("CH0 reads 0 V: Close the RES jumper JP5 for a bare thermistor", out)
+        self.assertNotIn("Short circuit", out)
+
+    def test_zero_volts_names_the_right_jumper(self):
+        self.chip.volts[2] = 0.0                     # RES left open on CH2
+        _, out, _ = self.run_example("02_thermistor_ntc.py", edits={"NTC_CHANNEL = 0": "NTC_CHANNEL = 2"})
+        self.assertIn("CH2 reads 0 V: Close the RES jumper JP7", out)
 
     def test_full_scale_warning_on_5v_board(self):
         self.chip.volts[0] = 4.5                     # cold NTC on a 5 V board, above ±4.096 V

@@ -10,7 +10,7 @@ This user guide covers the hardware. The Python and MicroPython code is in the [
 - **One 3-pin header per channel**: GND, VDD and SIG
 - **Protected inputs**: A 4.7 kΩ series resistor on every channel survives a brief connection to ±15 V
 - **Resistive sensors without extra parts**: Close a channel's RES jumper to connect a bare thermistor, LDR or force sensor
-- **One 2.54 mm host header**: VDD, GND, SCL, SDA and RDY
+- **One 2.54 mm host header**: GND, VDD, SCL, SDA and RDY, with GND on pin 1 like every sensor header
 - **Four I²C addresses**: Up to four boards (16 channels) on one bus
 - **Test pads** on every input and bus signal, and four M2.5 mounting holes
 - **5 µA idle current**: No power LED, so it suits battery-powered projects

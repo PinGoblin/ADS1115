@@ -29,7 +29,7 @@ Copy `micropython/ads1115.py` and `micropython/main.py` to the board (Thonny, or
 
 ## Wiring
 
-J1 VDD → 3V3, GND → GND, SCL → SCL, SDA → SDA. Power the board from **3.3 V** when it is wired to a Raspberry Pi or ESP32: Their I²C pins are not 5 V tolerant.
+J1 pin 1 GND → GND, pin 2 VDD → 3V3, pin 3 SCL → SCL, pin 4 SDA → SDA. Power the board from **3.3 V** when it is wired to a Raspberry Pi or ESP32: Their I²C pins are not 5 V tolerant.
 
 | RES jumper (per channel) | Sensor type |
 |---|---|

@@ -1,15 +1,15 @@
 # Board layout and pinouts
 
-The host connects to J1. Each sensor has its own 3-pin header, J2–J5.
+The host connects to J1. Each sensor has its own 3-pin header, J2–J5. Every header has GND on pin 1 and VDD on pin 2.
 
-**Minimum wiring:** 4 wires from the host to J1 (VDD, GND, SCL, SDA), and 2 or 3 wires per sensor to its header.
+**Minimum wiring:** 4 wires from the host to J1 (GND, VDD, SCL, SDA), and 2 or 3 wires per sensor to its header.
 
 ## J1 — host header (1×5, 2.54 mm)
 
 | Pin | Signal | Connect to |
 |---|---|---|
-| 1 | VDD **(Required)** | The host's 3.3 V pin. See [Which host pin to use](specifications.md#which-host-pin-to-use) |
-| 2 | GND **(Required)** | Host ground |
+| 1 | GND **(Required)** | Host ground |
+| 2 | VDD **(Required)** | The host's 3.3 V pin. See [Which host pin to use](specifications.md#which-host-pin-to-use) |
 | 3 | SCL **(Required)** | Host I²C clock |
 | 4 | SDA **(Required)** | Host I²C data |
 | 5 | RDY (Optional) | A GPIO input, for conversion-ready or threshold alerts. The board pulls it up to VDD |

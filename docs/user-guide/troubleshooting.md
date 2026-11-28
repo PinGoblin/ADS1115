@@ -4,7 +4,7 @@ Work through the table from the top. Most problems are I²C wiring, a jumper in 
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| Board not found, and TP5 to TP6 reads 0 V | No supply on VDD (the board has no power LED) | Check the wire from J1 pin 1 to the host's 3.3 V pin, and J1 pin 2 to GND |
+| Board not found, and TP5 to TP6 reads 0 V | No supply on VDD (the board has no power LED) | Check the wire from J1 pin 2 to the host's 3.3 V pin, and J1 pin 1 to GND |
 | `i2cdetect` shows nothing, or `No answer from the board at 0x48` | I²C disabled, SDA and SCL swapped, or no common ground | Enable I²C with `sudo raspi-config`, check Pi pins 3 and 5, check GND |
 | Board appears at an unexpected address | Address jumpers changed | Check JP1–JP4. Exactly one must be closed |
 | No address appears after setting 0x4A or 0x4B | JP1 not fully cut, so SDA or SCL is held low | Cut JP1 again and check it with a multimeter |

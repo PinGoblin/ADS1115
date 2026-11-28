@@ -17,7 +17,7 @@ Run the PinGoblin ADS1115 from 2.7–5.25 V, and keep every input between 0 V an
 
 VDD must equal the host's I²C voltage.
 
-| Host | Connect J1 pin 1 (VDD) to | Never connect it to |
+| Host | Connect J1 pin 2 (VDD) to | Never connect it to |
 |---|---|---|
 | Raspberry Pi (all 40-pin models) | Pin 1 or pin 17 (3V3) | Pin 2 or pin 4 (5V) |
 | ESP32 DevKit | 3V3 | 5V or VIN |

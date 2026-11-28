@@ -50,6 +50,14 @@ class TestMain(_MPExample):
                 _, out, _ = self.run_example(loops=1)
                 self.assertIn("T=--.- C", out)
 
+    def test_zero_volts_says_close_the_res_jumper(self):
+        self.chip.volts[0] = 0.0
+        _, out, _ = self.run_example(loops=1)
+        self.assertIn("CH0 reads 0 V: Close the RES jumper JP5", out)
+        self.chip.volts[0] = 1.65
+        _, out, _ = self.run_example(loops=1)
+        self.assertNotIn("reads 0 V", out)
+
     def test_full_scale_warning(self):
         self.chip.volts[0] = 4.5
         self.chip.volts[3] = 4.5
