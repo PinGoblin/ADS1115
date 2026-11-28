@@ -12,9 +12,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        # Raspberry Pi OS Bullseye (3.9), Bookworm (3.11) and Trixie (3.13)
-        python-version: ["3.9", "3.11", "3.13"]
+        # Raspberry Pi OS Bookworm (3.11) and Trixie (3.13); the runners no longer provide 3.9
+        python-version: ["3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7

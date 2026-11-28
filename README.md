@@ -51,7 +51,7 @@ Docstrings use the Google style with Markdown, and are rendered into the API ref
 
 ## Tests
 
-The tests use only the Python standard library and simulated hardware: A register-level ADS1115 model, a fake `smbus2`, and fake MicroPython `machine` and `time` modules. They cover both libraries, every example (with and without `--mock`), and checks that the docs match the code and the documentation style rules. CI runs them on Python 3.9, 3.11 and 3.13.
+The tests use only the Python standard library and simulated hardware: A register-level ADS1115 model, a fake `smbus2`, and fake MicroPython `machine` and `time` modules. They cover both libraries, every example (with and without `--mock`), and checks that the docs match the code and the documentation style rules. CI runs them on Python 3.11, 3.12 and 3.13.
 
 ```bash
 python3 -m unittest discover -s tests
