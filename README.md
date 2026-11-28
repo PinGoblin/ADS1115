@@ -1,6 +1,6 @@
 # PinGoblin ADS1115 – 4-channel 16-bit ADC breakout
 
-A breakout board that adds four 16-bit analogue inputs to a Raspberry Pi, ESP32 or any other I²C host. It uses the TI ADS1115, has a 3-pin sensor header (GND, VDD, SIG) per channel, protected inputs, solder-jumper configuration for resistive sensors, and two Qwiic / STEMMA QT connectors for daisy-chaining.
+A breakout board that adds four 16-bit analogue inputs to a Raspberry Pi, ESP32 or any other I²C host. It uses the TI ADS1115, has a 3-pin sensor header (GND, VDD, SIG) per channel, protected inputs, solder-jumper configuration for resistive sensors, and an idle current under 5 µA.
 
 **Documentation:** https://pingoblin.github.io/ADS1115/ (user guide and API reference)
 
@@ -29,14 +29,14 @@ Copy `micropython/ads1115.py` and `micropython/main.py` to the board (Thonny, or
 
 ## Wiring
 
-J1 VDD → 3V3, GND → GND, SCL → SCL, SDA → SDA, or use a Qwiic / STEMMA QT cable. Power the board from **3.3 V** when it is wired to a Raspberry Pi or ESP32: their I²C pins are not 5 V tolerant.
+J1 VDD → 3V3, GND → GND, SCL → SCL, SDA → SDA. Power the board from **3.3 V** when it is wired to a Raspberry Pi or ESP32: their I²C pins are not 5 V tolerant.
 
 | RES jumper (per channel) | Sensor type |
 |---|---|
 | Open (default) | Voltage-output sensors and modules (0 V to VDD): analogue modules, potentiometers, TMP36 |
 | Closed | Bare resistive sensors between SIG and GND: 10 k NTC thermistor, LDR, FSR, flex sensor |
 
-I²C address: 0x48 by default (JP1). Move the address jumper to JP2, JP3 or JP4 for 0x49, 0x4A or 0x4B, so up to four boards share one bus.
+I²C address: 0x48 by default (JP1). Move the address jumper to JP2, JP3 or JP4 for 0x49, 0x4A or 0x4B, so up to four boards share one bus (use 0x4A last).
 
 ## Documentation
 

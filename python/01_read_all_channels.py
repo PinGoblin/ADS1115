@@ -5,7 +5,7 @@ Prints the raw count and voltage of CH0–CH3 twice a second. Press Ctrl+C to st
 
 **Board setup**
 
-- Host on J1 or a Qwiic connector.
+- Host on J1.
 - Voltage-output sensors on J2–J5 (GND, VDD, SIG).
 - All RES jumpers open (the factory default).
 

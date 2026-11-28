@@ -43,4 +43,13 @@ for bad in (lambda: ADS1115(chip, address=0x50), lambda: adc.read_raw(4), lambda
     except ValueError:
         pass
 assert abs(adc.read_differential(0, 1, samples=3) - (1.0 - 1.65)) < 0.0002
+chip.v[2] = 5.0                                  # above the ±4.096 V range
+adc.read_voltage(2, samples=2); assert adc.clipped
+adc.read_voltage(0); assert not adc.clipped
+adc.start(2); adc.result_voltage(); assert adc.clipped
+try:
+    adc.read_voltage(4)
+    raise AssertionError("expected ValueError")
+except ValueError:
+    pass
 print("MicroPython module OK, config word", hex(cfg))

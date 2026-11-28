@@ -137,6 +137,23 @@ for th in threads:
 for th in threads:
     th.join()
 assert not errors, errors
+
+# full-scale flag: set when any conversion in a read hits ±fsr, cleared by the next read
+clip = p.ADS1115()
+CHIPS[0x48].v[2] = 5.0                            # above the ±4.096 V range
+clip.read_voltage(2, samples=3)
+assert clip.clipped
+clip.read_voltage(0)
+assert not clip.clipped
+clip.start(2)
+clip.result_voltage()
+assert clip.clipped
+CHIPS[0x48].v[2] = 0.2
+assert not p.ADS1115().clipped
+neg = p.ADS1115(fsr=2.048)
+neg.read_differential(2, 3)                       # 0.2 - 3.0 = -2.8 V, below -2.048 V
+assert neg.clipped
+assert abs(p.ADS1115(fsr=6.144).read_voltage(2) - 0.2) < 0.0004
 print("driver OK")
 
 # --- run every example briefly ---------------------------------------------
@@ -160,5 +177,24 @@ sys.argv = ["06", "3", "3.003"]
 runpy.run_path(os.path.join(PY, "06_calibrate.py"), run_name="__main__")
 cal = p.load_calibration()                       # written to calibration.json in the working directory
 assert abs(cal["3"] - 1.001) < 0.0005, cal
+os.remove(os.path.join(TMP, "calibration.json"))
+
+# example 2 reports an open thermistor even when noise leaves the reading just below VDD
+import contextlib
+import io
+for v_open in (3.3, 3.2995):
+    CHIPS[0x48].v[0] = v_open
+    calls["n"] = 0
+    out = io.StringIO()
+    with contextlib.redirect_stdout(out):
+        runpy.run_path(os.path.join(PY, "02_thermistor_ntc.py"), run_name="__main__")
+    assert "Open circuit" in out.getvalue(), (v_open, out.getvalue())
+CHIPS[0x48].v[0] = 1.65                           # 10 kΩ -> 25 °C
+calls["n"] = 0
+out = io.StringIO()
+with contextlib.redirect_stdout(out):
+    runpy.run_path(os.path.join(PY, "02_thermistor_ntc.py"), run_name="__main__")
+assert "T= 25.00 C" in out.getvalue(), out.getvalue()
+CHIPS[0x48].v[0] = 1.0
 time.sleep = real_sleep
 print("pi examples OK")
