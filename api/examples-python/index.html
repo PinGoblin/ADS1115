@@ -1,0 +1,1548 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="User guide and Python / MicroPython code for the PinGoblin ADS1115 4-channel 16-bit ADC breakout">
+      
+      
+      
+        <link rel="canonical" href="https://pingoblin.github.io/ADS1115/api/examples-python/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../examples-micropython/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
+    
+    
+      
+        <title>Raspberry Pi - PinGoblin ADS1115 ADC Breakout</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#raspberry-pi-examples" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="PinGoblin ADS1115 ADC Breakout" class="md-header__button md-logo" aria-label="PinGoblin ADS1115 ADC Breakout" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PinGoblin ADS1115 ADC Breakout
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Raspberry Pi
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/PinGoblin/ADS1115" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    PinGoblin/ADS1115
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../user-guide/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  User guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="PinGoblin ADS1115 ADC Breakout" class="md-nav__button md-logo" aria-label="PinGoblin ADS1115 ADC Breakout" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    PinGoblin ADS1115 ADC Breakout
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/PinGoblin/ADS1115" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    PinGoblin/ADS1115
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../user-guide/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User guide
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/board-layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Board layout and pinouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/quick-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/connecting-sensors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connecting sensors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/accuracy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Accuracy and calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/specifications/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Electrical specifications and safety
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Raspberry Pi
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Raspberry Pi
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#01_read_all_channelspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        01_read_all_channels.py
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#02_thermistor_ntcpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        02_thermistor_ntc.py
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#03_light_and_potpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        03_light_and_pot.py
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#04_multiple_boardspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        04_multiple_boards.py
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#05_csv_loggerpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        05_csv_logger.py
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples-micropython/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MicroPython
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/pingoblin_ads1115/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Raspberry Pi package (pingoblin_ads1115)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/ads1115/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MicroPython module (ads1115)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#01_read_all_channelspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        01_read_all_channels.py
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#02_thermistor_ntcpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        02_thermistor_ntc.py
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#03_light_and_potpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        03_light_and_pot.py
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#04_multiple_boardspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        04_multiple_boards.py
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#05_csv_loggerpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        05_csv_logger.py
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="raspberry-pi-examples">Raspberry Pi examples<a class="headerlink" href="#raspberry-pi-examples" title="Permanent link">&para;</a></h1>
+<p>The scripts in the <a href="https://github.com/PinGoblin/ADS1115/tree/main/python"><code>python/</code></a> folder. Each one imports the <a href="../reference/pingoblin_ads1115/"><code>pingoblin_ads1115</code></a> package. Run them with <code>python3 &lt;script&gt;</code> inside the virtual environment where the package is installed; press Ctrl+C to stop.</p>
+<table>
+<thead>
+<tr>
+<th>Script</th>
+<th>What it does</th>
+<th>Jumper setting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#01_read_all_channelspy"><code>01_read_all_channels.py</code></a></td>
+<td>Prints raw counts and volts for CH0–CH3</td>
+<td>RES open</td>
+</tr>
+<tr>
+<td><a href="#02_thermistor_ntcpy"><code>02_thermistor_ntc.py</code></a></td>
+<td>10 k NTC temperature with the Beta equation; can measure VDD live on a spare channel</td>
+<td>RES closed on the NTC channel</td>
+</tr>
+<tr>
+<td><a href="#03_light_and_potpy"><code>03_light_and_pot.py</code></a></td>
+<td>Potentiometer as a percentage and a bare LDR as resistance and light level</td>
+<td>CH0 RES open, CH1 RES closed</td>
+</tr>
+<tr>
+<td><a href="#04_multiple_boardspy"><code>04_multiple_boards.py</code></a></td>
+<td>Finds boards at 0x48–0x4B and reads up to 16 channels</td>
+<td>One address jumper per board</td>
+</tr>
+<tr>
+<td><a href="#05_csv_loggerpy"><code>05_csv_logger.py</code></a></td>
+<td>Logs averaged readings to CSV, e.g. <code>python3 05_csv_logger.py 60 log.csv</code></td>
+<td>Any</td>
+</tr>
+<tr>
+<td><a href="#06_calibratepy"><code>06_calibrate.py</code></a></td>
+<td>One-point gain calibration, saved to <code>calibration.json</code> and applied by the other examples</td>
+<td>RES open on the channel being calibrated</td>
+</tr>
+</tbody>
+</table>
+<h2 id="01_read_all_channelspy">01_read_all_channels.py<a class="headerlink" href="#01_read_all_channelspy" title="Permanent link">&para;</a></h2>
+<div class="highlight"><span class="filename">python/01_read_all_channels.py</span><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">"""Example 1: read all four channels.</span>
+
+<span class="sd">Prints the raw count and voltage of CH0–CH3 twice a second. Press Ctrl+C to stop.</span>
+
+<span class="sd">**Board setup**</span>
+
+<span class="sd">- Host on J1.</span>
+<span class="sd">- Voltage-output sensors on J2–J5 (GND, VDD, SIG).</span>
+<span class="sd">- All RES jumpers open (the factory default).</span>
+
+<span class="sd">Applies the calibration from `06_calibrate.py` if `calibration.json` exists.</span>
+<span class="sd">"""</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pingoblin_ads1115</span><span class="w"> </span><span class="kn">import</span> <span class="n">ADS1115</span><span class="p">,</span> <span class="n">load_calibration</span><span class="p">,</span> <span class="n">apply_calibration</span>
+
+<span class="n">adc</span> <span class="o">=</span> <span class="n">ADS1115</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="mh">0x48</span><span class="p">,</span> <span class="n">fsr</span><span class="o">=</span><span class="mf">4.096</span><span class="p">)</span>         <span class="c1"># +/-4.096 V full scale, 128 samples/s</span>
+<span class="n">cal</span> <span class="o">=</span> <span class="n">load_calibration</span><span class="p">()</span>                       <span class="c1"># optional, see 06_calibrate.py</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"CH0 (J2)        CH1 (J3)        CH2 (J4)        CH3 (J5)"</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">cells</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+            <span class="n">raw</span> <span class="o">=</span> <span class="n">adc</span><span class="o">.</span><span class="n">read_raw</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
+            <span class="n">volts</span> <span class="o">=</span> <span class="n">apply_calibration</span><span class="p">(</span><span class="n">raw</span> <span class="o">*</span> <span class="n">adc</span><span class="o">.</span><span class="n">fsr</span> <span class="o">/</span> <span class="mi">32768</span><span class="p">,</span> <span class="n">ch</span><span class="p">,</span> <span class="n">cal</span><span class="p">)</span>
+            <span class="n">cells</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">raw</span><span class="si">:</span><span class="s2">6d</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">volts</span><span class="si">:</span><span class="s2">6.3f</span><span class="si">}</span><span class="s2">V"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"  "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cells</span><span class="p">))</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<h2 id="02_thermistor_ntcpy">02_thermistor_ntc.py<a class="headerlink" href="#02_thermistor_ntcpy" title="Permanent link">&para;</a></h2>
+<div class="highlight"><span class="filename">python/02_thermistor_ntc.py</span><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">"""Example 2: temperature from a 10 kΩ NTC thermistor.</span>
+
+<span class="sd">**Board setup**</span>
+
+<span class="sd">- Close the RES jumper of the channel you use (JP5 for CH0).</span>
+<span class="sd">- Connect one thermistor lead to SIG (pin 3) and the other to GND (pin 1) of J2.</span>
+<span class="sd">  The VDD pin is not used, and a thermistor has no polarity.</span>
+
+<span class="sd">**Accuracy tips**</span>
+
+<span class="sd">- Measure the board's real VDD between TP5 and TP6 and set `VDD`, or</span>
+<span class="sd">- set `VDD_CHANNEL` to a spare channel and link that header's VDD pin to its SIG pin with</span>
+<span class="sd">  a jumper wire (RES open). The script then measures VDD live.</span>
+<span class="sd">- Set `R0`, `T0_C` and `BETA` from your thermistor's datasheet.</span>
+<span class="sd">"""</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pingoblin_ads1115</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">ADS1115</span><span class="p">,</span> <span class="n">resistance_from_voltage</span><span class="p">,</span> <span class="n">ntc_celsius</span><span class="p">,</span>
+                               <span class="n">load_calibration</span><span class="p">,</span> <span class="n">apply_calibration</span><span class="p">)</span>
+
+<span class="n">NTC_CHANNEL</span> <span class="o">=</span> <span class="mi">0</span>        <span class="c1"># CH0 = J2, RES jumper JP5 closed</span>
+<span class="n">VDD</span> <span class="o">=</span> <span class="mf">3.30</span>             <span class="c1"># your measured supply voltage</span>
+<span class="n">VDD_CHANNEL</span> <span class="o">=</span> <span class="kc">None</span>     <span class="c1"># e.g. 3 to measure VDD live on CH3 (J5 VDD linked to SIG)</span>
+
+<span class="c1"># Thermistor datasheet values</span>
+<span class="n">R0</span> <span class="o">=</span> <span class="mf">10_000.0</span>          <span class="c1"># resistance at T0</span>
+<span class="n">T0_C</span> <span class="o">=</span> <span class="mf">25.0</span>
+<span class="n">BETA</span> <span class="o">=</span> <span class="mf">3950.0</span>          <span class="c1"># check your part: 3380, 3435 and 3950 are all common</span>
+
+<span class="n">R_OPEN</span> <span class="o">=</span> <span class="mi">5_000_000</span>     <span class="c1"># above this the thermistor is treated as disconnected (a 10 k NTC is ~1 M at -55 C)</span>
+
+<span class="n">adc</span> <span class="o">=</span> <span class="n">ADS1115</span><span class="p">(</span><span class="n">fsr</span><span class="o">=</span><span class="mf">4.096</span><span class="p">)</span>
+<span class="n">cal</span> <span class="o">=</span> <span class="n">load_calibration</span><span class="p">()</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">vdd</span> <span class="o">=</span> <span class="n">VDD</span>
+        <span class="k">if</span> <span class="n">VDD_CHANNEL</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">vdd</span> <span class="o">=</span> <span class="n">apply_calibration</span><span class="p">(</span><span class="n">adc</span><span class="o">.</span><span class="n">read_voltage</span><span class="p">(</span><span class="n">VDD_CHANNEL</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="mi">8</span><span class="p">),</span> <span class="n">VDD_CHANNEL</span><span class="p">,</span> <span class="n">cal</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">apply_calibration</span><span class="p">(</span><span class="n">adc</span><span class="o">.</span><span class="n">read_voltage</span><span class="p">(</span><span class="n">NTC_CHANNEL</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="mi">16</span><span class="p">),</span> <span class="n">NTC_CHANNEL</span><span class="p">,</span> <span class="n">cal</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">adc</span><span class="o">.</span><span class="n">clipped</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Reading at full scale: on a 5 V board use ADS1115(fsr=6.144)"</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">resistance_from_voltage</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">vdd</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">r</span> <span class="o">&gt;</span> <span class="n">R_OPEN</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Open circuit - is the thermistor connected and RES closed?"</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Short circuit - check the thermistor wiring"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">ntc_celsius</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">R0</span><span class="p">,</span> <span class="n">T0_C</span><span class="p">,</span> <span class="n">BETA</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"V=</span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> V  VDD=</span><span class="si">{</span><span class="n">vdd</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> V  R=</span><span class="si">{</span><span class="n">r</span><span class="o">/</span><span class="mi">1000</span><span class="si">:</span><span class="s2">7.3f</span><span class="si">}</span><span class="s2"> k  T=</span><span class="si">{</span><span class="n">t</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2"> C"</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<h2 id="03_light_and_potpy">03_light_and_pot.py<a class="headerlink" href="#03_light_and_potpy" title="Permanent link">&para;</a></h2>
+<div class="highlight"><span class="filename">python/03_light_and_pot.py</span><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">"""Example 3: two sensor types on one board.</span>
+
+<span class="sd">Shows how a voltage-output channel and a resistive channel are converted differently.</span>
+
+<span class="sd">**Board setup**</span>
+
+<span class="sd">| Channel | Sensor | RES jumper | Wiring |</span>
+<span class="sd">|---|---|---|---|</span>
+<span class="sd">| CH0 (J2) | Potentiometer | Open | Ends to GND and VDD, wiper to SIG |</span>
+<span class="sd">| CH1 (J3) | Bare LDR | Closed (JP6) | One lead to SIG, the other to GND |</span>
+<span class="sd">"""</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pingoblin_ads1115</span><span class="w"> </span><span class="kn">import</span> <span class="n">ADS1115</span><span class="p">,</span> <span class="n">resistance_from_voltage</span><span class="p">,</span> <span class="n">percent_of_range</span>
+
+<span class="n">VDD</span> <span class="o">=</span> <span class="mf">3.30</span>
+
+<span class="n">adc</span> <span class="o">=</span> <span class="n">ADS1115</span><span class="p">(</span><span class="n">fsr</span><span class="o">=</span><span class="mf">4.096</span><span class="p">)</span>
+<span class="n">POT</span><span class="p">,</span> <span class="n">LDR</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>        <span class="c1"># channels</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">v_pot</span> <span class="o">=</span> <span class="n">adc</span><span class="o">.</span><span class="n">read_voltage</span><span class="p">(</span><span class="n">POT</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+        <span class="n">pot_pct</span> <span class="o">=</span> <span class="n">percent_of_range</span><span class="p">(</span><span class="n">v_pot</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">VDD</span><span class="p">)</span>
+
+        <span class="n">v_ldr</span> <span class="o">=</span> <span class="n">adc</span><span class="o">.</span><span class="n">read_voltage</span><span class="p">(</span><span class="n">LDR</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+        <span class="n">r_ldr</span> <span class="o">=</span> <span class="n">resistance_from_voltage</span><span class="p">(</span><span class="n">v_ldr</span><span class="p">,</span> <span class="n">VDD</span><span class="p">)</span>
+        <span class="c1"># LDR resistance falls as light rises; dark ~1 M, bright ~1 k.</span>
+        <span class="c1"># Brightness is shown as % of the voltage swing (bright = low voltage).</span>
+        <span class="n">light_pct</span> <span class="o">=</span> <span class="mf">100.0</span> <span class="o">-</span> <span class="n">percent_of_range</span><span class="p">(</span><span class="n">v_ldr</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">VDD</span><span class="p">)</span>
+
+        <span class="n">r_txt</span> <span class="o">=</span> <span class="s2">"open"</span> <span class="k">if</span> <span class="n">r_ldr</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">)</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">r_ldr</span><span class="o">/</span><span class="mi">1000</span><span class="si">:</span><span class="s2">8.1f</span><span class="si">}</span><span class="s2"> k"</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Pot </span><span class="si">{</span><span class="n">pot_pct</span><span class="si">:</span><span class="s2">5.1f</span><span class="si">}</span><span class="s2"> %   |   LDR </span><span class="si">{</span><span class="n">r_txt</span><span class="si">}</span><span class="s2">  light </span><span class="si">{</span><span class="n">light_pct</span><span class="si">:</span><span class="s2">5.1f</span><span class="si">}</span><span class="s2"> %"</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<h2 id="04_multiple_boardspy">04_multiple_boards.py<a class="headerlink" href="#04_multiple_boardspy" title="Permanent link">&para;</a></h2>
+<div class="highlight"><span class="filename">python/04_multiple_boards.py</span><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">"""Example 4: several boards on one I²C bus, up to 16 channels.</span>
+
+<span class="sd">Finds every board at 0x48–0x4B and prints all their channels once a second.</span>
+
+<span class="sd">**Board setup**</span>
+
+<span class="sd">Give every board a different address with the solder jumpers:</span>
+
+<span class="sd">| Board | Jumpers | Address |</span>
+<span class="sd">|---|---|---|</span>
+<span class="sd">| A | JP1 closed (default) | 0x48 |</span>
+<span class="sd">| B | Cut JP1, close JP2 | 0x49 |</span>
+<span class="sd">| C | Cut JP1, close JP3 | 0x4A |</span>
+<span class="sd">| D | Cut JP1, close JP4 | 0x4B |</span>
+
+<span class="sd">Wire pins 1–4 of every board's J1 (VDD, GND, SCL, SDA) in parallel to the Pi.</span>
+<span class="sd">`i2cdetect -y 1` lists the addresses the Pi can see. Up to four boards can share the Pi's bus.</span>
+<span class="sd">"""</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pingoblin_ads1115</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_boards</span>
+
+<span class="n">boards</span> <span class="o">=</span> <span class="n">find_boards</span><span class="p">(</span><span class="n">fsr</span><span class="o">=</span><span class="mf">4.096</span><span class="p">)</span>          <span class="c1"># tries 0x48-0x4B on I2C bus 1</span>
+<span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="n">boards</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found board at 0x</span><span class="si">{</span><span class="n">addr</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">boards</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">"No boards found - check wiring, power and `i2cdetect -y 1`."</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">addr</span><span class="p">,</span> <span class="n">adc</span> <span class="ow">in</span> <span class="n">boards</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">volts</span> <span class="o">=</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">adc</span><span class="o">.</span><span class="n">read_voltage</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span><span class="si">:</span><span class="s2">5.3f</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+            <span class="n">line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"0x</span><span class="si">{</span><span class="n">addr</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">volts</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"  |  "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<h2 id="05_csv_loggerpy">05_csv_logger.py<a class="headerlink" href="#05_csv_loggerpy" title="Permanent link">&para;</a></h2>
+<p><div class="highlight"><span class="filename">python/05_csv_logger.py</span><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+<span class="s2">"""Example 5: log all four channels to a CSV file.</span>
+
+<span class="s2">Each row holds an ISO timestamp, then CH0–CH3 in volts (16-sample averages). Open the file</span>
+<span class="s2">in a spreadsheet to chart it. Press Ctrl+C to stop.</span>
+
+<span class="s2">**Usage**</span>
+
+<span class="s2">```bash</span>
+<span class="s2">python3 05_csv_logger.py                 # every 5 s to ads_log.csv</span>
+<span class="s2">python3 05_csv_logger.py 60 garden.csv   # every 60 s to garden.csv</span>
+</code></pre></div>
+"""
+import csv
+import os
+import sys
+import time
+from datetime import datetime</p>
+<p>from pingoblin_ads1115 import ADS1115, load_calibration, apply_calibration</p>
+<p>interval = float(sys.argv[1]) if len(sys.argv) &gt; 1 else 5.0
+path = sys.argv[2] if len(sys.argv) &gt; 2 else "ads_log.csv"</p>
+<p>adc = ADS1115(fsr=4.096, rate=128)
+cal = load_calibration()</p>
+<p>new_file = not os.path.exists(path)
+with open(path, "a", newline="") as f:
+    writer = csv.writer(f)
+    if new_file:
+        writer.writerow(["timestamp", "ch0_V", "ch1_V", "ch2_V", "ch3_V"])
+    print(f"Logging every {interval:g} s to {path} - Ctrl+C to stop")
+    try:
+        while True:
+            start = time.monotonic()
+            row = [datetime.now().isoformat(timespec="seconds")]
+            for ch in range(4):
+                row.append(f"{apply_calibration(adc.read_voltage(ch, samples=16), ch, cal):.5f}")
+            writer.writerow(row)
+            f.flush()
+            print(", ".join(row))
+            time.sleep(max(0.0, interval - (time.monotonic() - start)))
+    except KeyboardInterrupt:
+        pass</p>
+<div class="highlight"><pre><span></span><code>## 06_calibrate.py
+
+```python title="python/06_calibrate.py"
+#!/usr/bin/env python3
+"""Example 6: one-point gain calibration.
+
+Removes the small gain error caused by the 4.7 kΩ series resistor and the ADC's own
+tolerance (typically 0.1–0.2 %).
+
+1. Leave the channel's RES jumper open.
+2. Link the header's VDD pin to its SIG pin with a jumper wire, or apply any steady
+   voltage between 1 V and VDD.
+3. Measure that voltage at the header with a good multimeter.
+4. Run `python3 06_calibrate.py &lt;channel&gt; &lt;multimeter volts&gt;`,
+   for example `python3 06_calibrate.py 0 3.297`.
+
+The factor is saved to `calibration.json` and applied automatically by the other
+examples. Repeat for each channel you use.
+"""
+import sys
+
+from pingoblin_ads1115 import ADS1115, load_calibration, save_calibration
+
+if len(sys.argv) != 3:
+    raise SystemExit(__doc__)
+
+ch = int(sys.argv[1])
+true_v = float(sys.argv[2])
+if ch not in range(4) or not 0.5 &lt;= true_v &lt;= 5.5:
+    raise SystemExit("Channel must be 0-3 and voltage 0.5-5.5 V")
+
+adc = ADS1115(fsr=4.096, rate=8)           # slowest rate = lowest noise
+measured = adc.read_voltage(ch, samples=32)
+if measured &lt; 0.25:
+    raise SystemExit(f"CH{ch} reads {measured:.4f} V - is the voltage connected?")
+
+factor = true_v / measured
+if not 0.97 &lt;= factor &lt;= 1.03:
+    raise SystemExit(f"Factor {factor:.5f} is outside +/-3 % - check the wiring and meter")
+
+cal = load_calibration()
+cal[str(ch)] = round(factor, 6)
+save_calibration(cal)
+print(f"CH{ch}: measured {measured:.5f} V, true {true_v:.5f} V -&gt; factor {factor:.5f} saved")
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 PinGoblin. MIT licence.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "content.code.copy", "search.highlight"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>
