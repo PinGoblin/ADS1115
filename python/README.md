@@ -16,7 +16,7 @@ python3 01_read_all_channels.py
 |---|---|---|
 | `01_read_all_channels.py` | Raw counts and volts on CH0–CH3 | RES open |
 | `02_thermistor_ntc.py` | 10 k NTC temperature (Beta equation), optional live VDD measurement | RES closed on the NTC channel |
-| `03_light_and_pot.py` | Two sensor types side by side: potentiometer (%) and bare LDR | CH0 RES open, CH1 RES closed |
+| `03_light_and_pot.py` | Two sensor types side by side: A potentiometer (%) and a bare LDR | CH0 RES open, CH1 RES closed |
 | `04_multiple_boards.py` | Finds up to four boards (0x48–0x4B) and reads 16 channels | One address jumper per board |
 | `05_csv_logger.py` | Logs all channels to CSV: `python3 05_csv_logger.py 60 log.csv` | Any |
 | `06_calibrate.py` | One-point gain calibration saved to `calibration.json` | RES open on the channel being calibrated |
@@ -30,6 +30,8 @@ python3 01_read_all_channels.py
 | `adc.read_differential(pos, neg, samples=1)` | Voltage between two inputs |
 | `adc.enable_ready_pin()`, `adc.start(ch)`, `adc.result_voltage()` | Conversions signalled by the RDY pin |
 | `find_boards(bus=1)` | Every board that answers at 0x48–0x4B |
+| `MockBus(volts=DEFAULT_VOLTS, addresses=(0x48,))` | A simulated bus with boards on it: Pass it as `bus` to run without hardware. Every example accepts `--mock` |
+| `BusError`, `InputRangeError` | Raised when a board does not answer, or a reading reaches the full-scale range. The message says what to do |
 | `resistance_from_voltage(v_adc, vdd=VDD_NOMINAL)` | Sensor resistance with the RES jumper closed: `10k × V / (VDD − V)` |
 | `ntc_celsius(r_ntc, r0=10000, t0_c=25, beta=3950)` | Thermistor temperature (Beta equation) |
 | `percent_of_range(v_adc, v_min=0, v_max=VDD_NOMINAL)` | Voltage as a percentage of a range |
